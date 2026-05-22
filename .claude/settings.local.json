@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -rn \">[A-Za-zÇĞİÖŞÜçğışöü][A-Za-zÇĞİÖŞÜçğışöü ]\\\\{4,\\\\}<\" c:/Users/gokha/Desktop/staatsexamen/src/components/ --include=\"*.tsx\")"
+    ]
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "appbar": {
+    "brand": "NT2 · PREP",
+    "title": "Staatsexamen"
+  },
+  "nav": {
+    "spreken": "Speaking",
+    "schrijven": "Writing",
+    "lezen": "Reading",
+    "luisteren": "Listening"
+  },
+  "dashboard": {
+    "subtitle": "NT2 Exam Preparation",
+    "examIn": "Exam in",
+    "days": "days",
+    "modules": "Modules",
+    "statistics": "Statistics",
+    "progress": "Progress",
+    "stats": {
+      "streak": "Day Streak",
+      "completed": "Completed",
+      "words": "Words"
+    }
+  },
+  "level": {
+    "B1": "Programme I – B1",
+    "B2": "Programme II – B2",
+    "B1_desc": "NT2 at B1 level. Suitable for daily communication in Dutch.",
+    "B2_desc": "NT2 at B2 level. Required for higher education and professional environments.",
+    "switchLabel": "Select Programme"
+  },
+  "skill": {
+    "spreken": {
+      "name": "Spreken",
+      "desc": "Timed speaking tasks & picture descriptions"
+    },
+    "schrijven": {
+      "name": "Schrijven",
+      "desc": "Letters, emails & sentence completion"
+    },
+    "lezen": {
+      "name": "Lezen",
+      "desc": "Reading comprehension & strategies"
+    },
+    "luisteren": {
+      "name": "Luisteren",
+      "desc": "Listening comprehension & exercises"
+    }
+  },
+  "common": {
+    "start": "Start",
+    "next": "Next",
+    "back": "Back",
+    "done": "Done",
+    "cancel": "Cancel",
+    "save": "Save",
+    "retry": "Retry",
+    "close": "Close",
+    "loading": "Loading...",
+    "empty": "No content yet",
+    "day": "Day",
+    "of": "/",
+    "complete": "Complete",
+    "markDone": "Mark as completed"
+  },
+  "errors": {
+    "general": "Something went wrong. Please try again.",
+    "network": "Connection error. Check your internet connection.",
+    "notFound": "Content not found.",
+    "audioPermission": "Microphone access denied. Please allow it in your browser settings.",
+    "audioRecord": "Could not start audio recording."
+  },
+  "spreken": {
+    "title": "Spreken Module",
+    "deel1": "Deel 1 – Short Answers",
+    "deel2": "Deel 2 – Pictures",
+    "deel3": "Deel 3 – Graph & Table",
+    "taskLabel": "Task",
+    "vocab": "Vocabulary",
+    "phrases": "Phrases",
+    "examTask": "Exam Task",
+    "timer": {
+      "prepare": "Prepare",
+      "speak": "Speak",
+      "ready": "Ready?",
+      "go": "Go!"
+    },
+    "recording": {
+      "record": "Record",
+      "stop": "Stop",
+      "play": "Play",
+      "delete": "Delete",
+      "saved": "Saved"
+    },
+    "concrete": "Stress word",
+    "concreteHint": "Concrete word often forgotten under exam stress"
+  },
+  "study": {
+    "tabs": {
+      "flashcard": "Flashcards",
+      "exam": "Exam Simulation"
+    }
+  },
+  "flashcard": {
+    "flip": "Flip",
+    "correct": "Correct",
+    "wrong": "Wrong",
+    "concrete": "Stress Word",
+    "category": "Category",
+    "example": "Example",
+    "showTranslation": "Show Translation"
+  }
+}

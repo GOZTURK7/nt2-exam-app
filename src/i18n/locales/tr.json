@@ -1,0 +1,113 @@
+{
+  "appbar": {
+    "brand": "NT2 · PREP",
+    "title": "Staatsexamen"
+  },
+  "nav": {
+    "spreken": "Konuşma",
+    "schrijven": "Yazma",
+    "lezen": "Okuma",
+    "luisteren": "Dinleme"
+  },
+  "dashboard": {
+    "subtitle": "NT2 Sınav Hazırlığı",
+    "examIn": "Sınava",
+    "days": "gün kaldı",
+    "modules": "Modüller",
+    "statistics": "İstatistikler",
+    "progress": "İlerleme",
+    "stats": {
+      "streak": "Gün Serisi",
+      "completed": "Tamamlanan",
+      "words": "Kelime"
+    }
+  },
+  "level": {
+    "B1": "Program I – B1",
+    "B2": "Program II – B2",
+    "B1_desc": "B1 seviyesinde NT2. Günlük Hollandaca iletişim için uygundur.",
+    "B2_desc": "B2 seviyesinde NT2. Yükseköğretim ve profesyonel ortamlar için gereklidir.",
+    "switchLabel": "Program Seç"
+  },
+  "skill": {
+    "spreken": {
+      "name": "Spreken",
+      "desc": "Zamanlı konuşma görevleri ve plaatjes"
+    },
+    "schrijven": {
+      "name": "Schrijven",
+      "desc": "Mektup, e-posta ve cümle tamamlama"
+    },
+    "lezen": {
+      "name": "Lezen",
+      "desc": "Okuma anlayışı ve stratejiler"
+    },
+    "luisteren": {
+      "name": "Luisteren",
+      "desc": "Dinleme anlayışı ve alıştırmalar"
+    }
+  },
+  "common": {
+    "start": "Başla",
+    "next": "İleri",
+    "back": "Geri",
+    "done": "Bitti",
+    "cancel": "İptal",
+    "save": "Kaydet",
+    "retry": "Tekrar Dene",
+    "close": "Kapat",
+    "loading": "Yükleniyor...",
+    "empty": "Henüz içerik yok",
+    "day": "Gün",
+    "of": "/",
+    "complete": "Tamamla",
+    "markDone": "Tamamlandı olarak işaretle"
+  },
+  "errors": {
+    "general": "Bir hata oluştu. Lütfen tekrar deneyin.",
+    "network": "Bağlantı hatası. İnternet bağlantınızı kontrol edin.",
+    "notFound": "İçerik bulunamadı.",
+    "audioPermission": "Mikrofon erişimi reddedildi. Lütfen tarayıcı ayarlarından izin verin.",
+    "audioRecord": "Ses kaydı başlatılamadı."
+  },
+  "spreken": {
+    "title": "Spreken Modülü",
+    "deel1": "Deel 1 – Kısa Yanıtlar",
+    "deel2": "Deel 2 – Plaatjes",
+    "deel3": "Deel 3 – Grafik & Tablo",
+    "taskLabel": "Görev",
+    "vocab": "Kelimeler",
+    "phrases": "Kalıplar",
+    "examTask": "Sınav Görevi",
+    "timer": {
+      "prepare": "Hazırlan",
+      "speak": "Konuş",
+      "ready": "Hazır mısın?",
+      "go": "Başla!"
+    },
+    "recording": {
+      "record": "Kaydet",
+      "stop": "Durdur",
+      "play": "Dinle",
+      "delete": "Sil",
+      "saved": "Kaydedildi"
+    },
+    "concrete": "Stres kelimesi",
+    "concreteHint": "Sınav stresinde sık unutulan somut kelime"
+  },
+  "study": {
+    "tabs": {
+      "flashcard": "Kelimeler",
+      "exam": "Sınav Simülasyonu"
+    }
+  },
+  "flashcard": {
+    "flip": "Çevir",
+    "correct": "Doğru",
+    "wrong": "Yanlış",
+    "concrete": "Stres Kelimesi",
+    "category": "Kategori",
+    "example": "Örnek Cümle",
+    "showTranslation": "Çeviriyi Göster"
+  }
+}
