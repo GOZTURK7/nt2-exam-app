@@ -16,6 +16,20 @@
     "modules": "Modüller",
     "statistics": "İstatistikler",
     "progress": "İlerleme",
+    "countdown": "GERİ SAYIM",
+    "daysUnit": "gün",
+    "hoursUnit": "saat",
+    "minutesUnit": "dk",
+    "secondsUnit": "sn",
+    "setExamDate": "Sınav Tarihi Gir",
+    "examDate": "Sınav Tarihi",
+    "dailyHours": "Günlük Çalışma Saati",
+    "edit": "Düzenle",
+    "perDay": "gün başına ders",
+    "intensityLabel": "Yoğunluk",
+    "noExamDate": "Sınav tarihi girilmedi",
+    "examPassed": "Sınav tamamlandı!",
+    "hoursPerDay": "saat/gün",
     "stats": {
       "streak": "Gün Serisi",
       "completed": "Tamamlanan",
@@ -93,21 +107,45 @@
       "saved": "Kaydedildi"
     },
     "concrete": "Stres kelimesi",
-    "concreteHint": "Sınav stresinde sık unutulan somut kelime"
+    "concreteHint": "Sınav stresinde sık unutulan somut kelime",
+    "dayCompleted": "Gün Tamamlandı",
+    "prevRecording": "Önceki Kayıt"
+  },
+  "exam": {
+    "practiceImages": "Alıştırma resimleri — gördüklerinizi tanımlayın"
   },
   "study": {
     "tabs": {
       "flashcard": "Kelimeler",
-      "exam": "Sınav Simülasyonu"
+      "exam": "Sınav",
+      "dictionary": "Sözlük"
     }
   },
   "flashcard": {
     "flip": "Çevir",
-    "correct": "Doğru",
-    "wrong": "Yanlış",
+    "again": "Tekrar",
+    "hard": "Zor",
+    "good": "İyi",
+    "easy": "Kolay",
+    "correct": "Bildim",
+    "wrong": "Bilmedim",
     "concrete": "Stres Kelimesi",
     "category": "Kategori",
-    "example": "Örnek Cümle",
-    "showTranslation": "Çeviriyi Göster"
+    "example": "Örnek",
+    "examples": "Örnek Cümleler",
+    "tapToFlip": "Anlamı görmek için dokun",
+    "showTranslation": "Çeviriyi Göster",
+    "prev": "Önceki",
+    "next": "Sonraki",
+    "of": "/",
+    "phrases": "Konuşma Kalıpları",
+    "allWords": "Tüm kelimeler"
+  },
+  "dictionary": {
+    "title": "Sözlük",
+    "search": "Kelime ara...",
+    "noResults": "Sonuç bulunamadı",
+    "allCategories": "Tüm Kategoriler",
+    "wordCount": "kelime"
   }
 }

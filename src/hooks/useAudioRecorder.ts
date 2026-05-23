@@ -9,6 +9,7 @@ interface UseAudioRecorder {
   start: () => Promise<boolean>;
   stop: () => void;
   reset: () => void;
+  cleanup: () => void;
 }
 
 export function useAudioRecorder(): UseAudioRecorder {
@@ -17,6 +18,7 @@ export function useAudioRecorder(): UseAudioRecorder {
   const [error, setError] = useState<string | null>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const urlRef = useRef<string | null>(null);
 
@@ -31,6 +33,7 @@ export function useAudioRecorder(): UseAudioRecorder {
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
       const recorder = new MediaRecorder(stream);
       mediaRecorderRef.current = recorder;
 
@@ -73,5 +76,17 @@ export function useAudioRecorder(): UseAudioRecorder {
     setError(null);
   }, []);
 
-  return { recordingState, audioUrl, error, start, stop, reset };
+  const cleanup = useCallback(() => {
+    streamRef.current?.getTracks().forEach((t) => t.stop());
+    streamRef.current = null;
+    if (urlRef.current) {
+      URL.revokeObjectURL(urlRef.current);
+      urlRef.current = null;
+    }
+    setAudioUrl(null);
+    setRecordingState('idle');
+    setError(null);
+  }, []);
+
+  return { recordingState, audioUrl, error, start, stop, reset, cleanup };
 }

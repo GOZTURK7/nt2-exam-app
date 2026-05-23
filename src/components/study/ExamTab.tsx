@@ -1,83 +1,225 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Mic, Square, Trash2, AlertCircle } from 'lucide-react';
+import { Mic, Square, Trash2, AlertCircle, CheckCircle2 } from 'lucide-react';
 import type { ProgramDay } from '../../types';
 import { useAudioRecorder } from '../../hooks/useAudioRecorder';
+import { saveAudio, getAudio, deleteAudio } from '../../services/audioService';
+import { TOKENS } from '../../lib/tokens';
 
 interface ExamTabProps {
   day: ProgramDay;
+  onComplete?: () => void;
+  isCompleted?: boolean;
 }
 
-type SimState = 'ready' | 'recording' | 'done';
+type SimState = 'idle' | 'preparing' | 'recording' | 'done';
 
 const RADIUS = 54;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
-export default function ExamTab({ day }: ExamTabProps) {
+export default function ExamTab({ day, onComplete, isCompleted }: ExamTabProps) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as 'tr' | 'en';
 
-  const duration = day.examTask.durationSeconds ?? 20;
+  const speakDuration = day.examTask.durationSeconds ?? 20;
+  const prepDuration = day.examTask.prepSeconds ?? 0;
   const instruction =
     day.examTask.instructionTranslations[lang] ??
     day.examTask.instructionTranslations['en'] ??
     '';
 
-  const [simState, setSimState] = useState<SimState>('ready');
-  const [timeLeft, setTimeLeft] = useState(duration);
+  const [simState, setSimState] = useState<SimState>('idle');
+  const [timeLeft, setTimeLeft] = useState(speakDuration);
+  const [prepLeft, setPrepLeft] = useState(prepDuration);
+  const [idbUrl, setIdbUrl] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const { audioUrl, error, start, stop, reset } = useAudioRecorder();
+  const rafRef = useRef<number>(0);
+  const startTimeRef = useRef<number>(0);
+  const idbUrlRef = useRef<string | null>(null);
 
-  /* countdown — only runs while recording */
+  const { audioUrl, error, start, stop, reset, cleanup } = useAudioRecorder();
+
+  // Keep a stable ref to `start` so prep-phase rAF can call it without stale closure
+  const startRef = useRef(start);
+  useEffect(() => { startRef.current = start; }, [start]);
+
+  // Load previous recording from IndexedDB on mount
+  useEffect(() => {
+    getAudio(day.examTask.id).then((blob) => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      idbUrlRef.current = url;
+      setIdbUrl(url);
+      setSimState('done');
+    });
+    return () => {
+      if (idbUrlRef.current) {
+        URL.revokeObjectURL(idbUrlRef.current);
+        idbUrlRef.current = null;
+      }
+    };
+  }, [day.examTask.id]);
+
+  // Release mic on unmount
+  useEffect(() => () => cleanup(), [cleanup]);
+
+  // Preparation-phase countdown (rAF, no drift)
+  useEffect(() => {
+    if (simState !== 'preparing') return;
+    startTimeRef.current = performance.now();
+
+    const tick = () => {
+      const elapsed = performance.now() - startTimeRef.current;
+      const remaining = Math.max(0, prepDuration - Math.floor(elapsed / 1000));
+      setPrepLeft(remaining);
+      if (remaining === 0) {
+        // Auto-transition to recording
+        setTimeLeft(speakDuration);
+        startRef.current().then((ok) => {
+          setSimState(ok ? 'recording' : 'idle');
+        });
+        return;
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [simState, prepDuration, speakDuration]);
+
+  // Speak-phase countdown (rAF, no drift)
   useEffect(() => {
     if (simState !== 'recording') return;
+    startTimeRef.current = performance.now();
 
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          stop();
-          setSimState('done');
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    const tick = () => {
+      const elapsed = performance.now() - startTimeRef.current;
+      const remaining = Math.max(0, speakDuration - Math.floor(elapsed / 1000));
+      setTimeLeft(remaining);
+      if (remaining === 0) {
+        stop();
+        setSimState('done');
+        return;
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    };
 
-    return () => clearInterval(interval);
-  }, [simState, stop]);
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [simState, speakDuration, stop]);
+
+  // Persist fresh recording to IndexedDB when done
+  useEffect(() => {
+    if (simState !== 'done' || !audioUrl) return;
+    // Revoke stale IDB URL since we now have a fresh recording
+    if (idbUrlRef.current) {
+      URL.revokeObjectURL(idbUrlRef.current);
+      idbUrlRef.current = null;
+      setIdbUrl(null);
+    }
+    setIsSaving(true);
+    fetch(audioUrl)
+      .then((r) => r.blob())
+      .then((blob) => saveAudio(day.examTask.id, blob))
+      .finally(() => setIsSaving(false));
+  }, [simState, audioUrl, day.examTask.id]);
 
   const handleStart = async () => {
+    cancelAnimationFrame(rafRef.current);
     reset();
-    setTimeLeft(duration);
-    const ok = await start();
-    if (ok) setSimState('recording');
+    // Revoke old IDB URL
+    if (idbUrlRef.current) {
+      URL.revokeObjectURL(idbUrlRef.current);
+      idbUrlRef.current = null;
+      setIdbUrl(null);
+    }
+    if (prepDuration > 0) {
+      setPrepLeft(prepDuration);
+      setSimState('preparing');
+    } else {
+      setTimeLeft(speakDuration);
+      const ok = await start();
+      if (ok) setSimState('recording');
+    }
   };
 
   const handleStopEarly = () => {
+    cancelAnimationFrame(rafRef.current);
     stop();
     setSimState('done');
   };
 
-  const handleReset = () => {
+  const handleReset = async () => {
+    cancelAnimationFrame(rafRef.current);
     reset();
-    setTimeLeft(duration);
-    setSimState('ready');
+    await deleteAudio(day.examTask.id);
+    if (idbUrlRef.current) {
+      URL.revokeObjectURL(idbUrlRef.current);
+      idbUrlRef.current = null;
+    }
+    setIdbUrl(null);
+    setTimeLeft(speakDuration);
+    setPrepLeft(prepDuration);
+    setSimState('idle');
   };
 
-  /* ring progress: 1 = full, 0 = empty */
-  const progress = timeLeft / duration;
+  // Derived display values
+  const isPrepping = simState === 'preparing';
+  const isSpeaking = simState === 'recording';
+  const isDone = simState === 'done';
+
+  const timerValue = isPrepping ? prepLeft : timeLeft;
+  const timerMax = isPrepping ? prepDuration : speakDuration;
+  const progress = timerMax > 0 ? timerValue / timerMax : 1;
   const dashOffset = CIRCUMFERENCE * (1 - progress);
 
   const ringColor =
-    simState === 'recording'
-      ? '#e8ff47'
-      : simState === 'done'
-      ? '#47ffb4'
-      : '#47b4ff';
+    isSpeaking ? TOKENS.yellow :
+    isPrepping  ? TOKENS.blue   :
+    isDone      ? TOKENS.green  : TOKENS.border;
+
+  // Show the freshly recorded URL first, then fall back to the IDB-loaded one
+  const displayUrl = audioUrl ?? idbUrl;
 
   return (
     <div className="max-w-lg mx-auto px-4 py-6 flex flex-col items-center gap-6">
+
+      {/* Exam type + duration badge */}
+      <div className="w-full flex items-center gap-2">
+        <span className="font-mono text-[9px] text-cyber-muted uppercase tracking-widest">
+          {day.examType}
+        </span>
+        <div className="flex-1 h-px bg-cyber-border/40" />
+        {prepDuration > 0 && (
+          <span className="font-mono text-[9px] text-cyber-blue/70 uppercase tracking-widest">
+            prep {prepDuration}s
+          </span>
+        )}
+        <span className="font-mono text-[9px] text-cyber-yellow/70 uppercase tracking-widest ml-1">
+          speak {speakDuration}s
+        </span>
+      </div>
+
+      {/* Practice images */}
+      {day.examTask.imageUrls && day.examTask.imageUrls.length > 0 && (
+        <div className="w-full">
+          <p className="font-mono text-[9px] text-cyber-muted uppercase tracking-widest mb-2">
+            {t('exam.practiceImages')}
+          </p>
+          <div className="flex gap-3 overflow-x-auto pb-1 snap-x snap-mandatory">
+            {day.examTask.imageUrls.map((url, i) => (
+              <img
+                key={i}
+                src={url}
+                alt={`${i + 1}`}
+                className="rounded-xl border border-cyber-border h-44 w-auto object-cover shrink-0 snap-start"
+                loading="lazy"
+              />
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Instruction card */}
       <div className="w-full bg-cyber-card border border-cyber-border rounded-2xl p-4">
@@ -96,41 +238,50 @@ export default function ExamTab({ day }: ExamTabProps) {
           className="-rotate-90"
           aria-hidden
         >
-          {/* Track */}
-          <circle
-            cx="74" cy="74" r={RADIUS}
-            fill="none" stroke="#2a2a38" strokeWidth="8"
-          />
-          {/* Progress arc */}
+          <circle cx="74" cy="74" r={RADIUS} fill="none" strokeWidth="8"
+            style={{ stroke: TOKENS.border }} />
           <circle
             cx="74" cy="74" r={RADIUS}
             fill="none"
-            stroke={ringColor}
             strokeWidth="8"
             strokeLinecap="round"
             strokeDasharray={CIRCUMFERENCE}
             strokeDashoffset={dashOffset}
             style={{
-              transition: simState === 'recording'
+              stroke: ringColor,
+              transition: (isSpeaking || isPrepping)
                 ? 'stroke-dashoffset 1s linear, stroke 0.4s ease'
                 : 'stroke 0.4s ease',
             }}
           />
         </svg>
 
-        {/* Center overlay (counter-rotates the text) */}
+        {/* Center text (counter-rotates the SVG rotation) */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          {simState === 'ready' && (
+          {simState === 'idle' && (
             <>
-              <span className="font-mono text-3xl font-black text-cyber-muted">{duration}</span>
+              <span className="font-mono text-3xl font-black text-cyber-muted">{speakDuration}</span>
               <span className="font-mono text-[9px] text-cyber-muted uppercase tracking-widest mt-1">sec</span>
+            </>
+          )}
+          {simState === 'preparing' && (
+            <>
+              <span
+                className="font-mono text-4xl font-black text-cyber-blue"
+                style={{ textShadow: 'var(--glow-blue)' }}
+              >
+                {prepLeft}
+              </span>
+              <span className="font-mono text-[9px] text-cyber-blue/70 uppercase tracking-widest mt-1">
+                {t('spreken.timer.prepare')}
+              </span>
             </>
           )}
           {simState === 'recording' && (
             <>
               <span
                 className="font-mono text-4xl font-black text-cyber-yellow"
-                style={{ textShadow: '0 0 18px rgba(232,255,71,0.55)' }}
+                style={{ textShadow: 'var(--glow-yellow)' }}
               >
                 {timeLeft}
               </span>
@@ -142,7 +293,7 @@ export default function ExamTab({ day }: ExamTabProps) {
           {simState === 'done' && (
             <span
               className="font-mono text-sm font-black text-cyber-green"
-              style={{ textShadow: '0 0 12px rgba(71,255,180,0.4)' }}
+              style={{ textShadow: 'var(--glow-green)' }}
             >
               {t('common.done')}
             </span>
@@ -160,8 +311,9 @@ export default function ExamTab({ day }: ExamTabProps) {
         </div>
       )}
 
-      {/* Controls */}
-      {simState === 'ready' && (
+      {/* ── Controls ── */}
+
+      {simState === 'idle' && (
         <button
           onClick={handleStart}
           className="
@@ -174,6 +326,31 @@ export default function ExamTab({ day }: ExamTabProps) {
           <Mic size={18} />
           {t('spreken.recording.record')}
         </button>
+      )}
+
+      {simState === 'preparing' && (
+        <div className="flex flex-col items-center gap-3">
+          <p className="font-mono text-xs text-cyber-blue/70 text-center">
+            {t('spreken.timer.ready')}
+          </p>
+          <button
+            onClick={async () => {
+              cancelAnimationFrame(rafRef.current);
+              setTimeLeft(speakDuration);
+              const ok = await start();
+              if (ok) setSimState('recording');
+            }}
+            className="
+              flex items-center gap-2 px-7 py-3 rounded-xl
+              bg-cyber-yellow/10 border border-cyber-yellow text-cyber-yellow
+              font-mono text-sm font-bold uppercase tracking-wider
+              hover:bg-cyber-yellow/20 transition-all active:scale-95
+            "
+          >
+            <Mic size={18} />
+            {t('spreken.timer.go')}
+          </button>
+        </div>
       )}
 
       {simState === 'recording' && (
@@ -193,17 +370,18 @@ export default function ExamTab({ day }: ExamTabProps) {
 
       {simState === 'done' && (
         <div className="w-full flex flex-col gap-3">
+
           {/* Audio player */}
-          {audioUrl ? (
+          {displayUrl ? (
             <div className="bg-cyber-card border border-cyber-green/30 rounded-2xl p-4">
               <p className="font-mono text-[9px] text-cyber-green uppercase tracking-widest mb-3">
-                {t('spreken.recording.saved')}
+                {isSaving ? t('common.loading') : t('spreken.recording.saved')}
               </p>
               <audio
-                src={audioUrl}
+                src={displayUrl}
                 controls
                 className="w-full"
-                style={{ colorScheme: 'dark' }}
+                style={{ colorScheme: 'inherit' }}
               />
             </div>
           ) : (
@@ -212,7 +390,7 @@ export default function ExamTab({ day }: ExamTabProps) {
             </div>
           )}
 
-          {/* Action row */}
+          {/* Delete / Re-record row */}
           <div className="flex gap-3">
             <button
               onClick={handleReset}
@@ -227,7 +405,7 @@ export default function ExamTab({ day }: ExamTabProps) {
               {t('spreken.recording.delete')}
             </button>
             <button
-              onClick={handleReset}
+              onClick={handleStart}
               className="
                 flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl
                 border border-cyber-blue text-cyber-blue bg-cyber-blue/10
@@ -239,6 +417,28 @@ export default function ExamTab({ day }: ExamTabProps) {
               {t('common.retry')}
             </button>
           </div>
+
+          {/* Mark as done */}
+          {onComplete && (
+            <button
+              onClick={() => { if (!isCompleted) onComplete(); }}
+              className={`
+                w-full flex items-center justify-center gap-2 py-3 rounded-xl
+                font-mono text-sm font-bold uppercase tracking-wider transition-all active:scale-95
+                ${isCompleted
+                  ? 'border border-cyber-green/40 text-cyber-green/50 bg-cyber-green/5 cursor-default'
+                  : 'border border-cyber-green text-cyber-green bg-cyber-green/10 hover:bg-cyber-green/20'
+                }
+              `}
+            >
+              <CheckCircle2 size={16} />
+              {isCompleted
+                ? t('spreken.dayCompleted')
+                : t('common.markDone')
+              }
+            </button>
+          )}
+
         </div>
       )}
 

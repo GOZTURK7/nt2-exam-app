@@ -20,7 +20,14 @@ You are acting as a Senior Full-Stack Engineer. Build a production-ready, mobile
 4. **Media Handling:** - The `Spreken` module requires a robust Web Audio API implementation with visual timers (20s/30s/120s). Audio should be stored in memory for immediate playback.
 
 ## UI/UX Guidelines
-- **Theme:** Professional Dark/Cyberpunk Mode (Backgrounds: #0a0a0f, Accents: #e8ff47, #47b4ff).
+- **Theme:** Professional Dark / Dutch-Navy Mode — inspired by the NT2 Dutch national palette.
+  - Backgrounds: `#04080f` (midnight navy-black), `#080f1e` (dark navy surface), `#0d1a2a` (card)
+  - Borders: `#172840` (blue-tinted border), `#2060d0/25` (royal accent border)
+  - Accents: `#f5c432` (warm amber-gold, spreken), `#58b2ff` (sky blue, schrijven), `#30d080` (emerald green, lezen), `#b46aff` (purple, luisteren)
+  - Royal accent: `#2060d0` (Dutch royal blue) — used for gradients, dividers, hover highlights
+  - Text: `#d8ebff` (cool moonlight), muted: `#6d8faa` (readable blue-gray)
+  - Header: `linear-gradient(135deg, #04080f → #091a32 → #050e1a)` — subtle depth gradient
+  - Grid: `rgba(32,96,208,0.06)` lines at 40px — visible but refined
 - **Layout:** Mobile-first, bottom navigation bar for the 4 core skills, and a top app bar for Level Switcher (B1 <-> B2) and Language Switcher.
 
 ## Initial Task

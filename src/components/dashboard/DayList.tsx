@@ -12,10 +12,12 @@ interface DayListProps {
 
 export default function DayList({ skill, level, onDaySelect }: DayListProps) {
   const { t } = useTranslation();
-  const { getDays } = useContentStore();
-  const { isDayCompleted, completeDay, uncompleteDay } = useProgressStore();
-
-  const days = getDays(level, skill);
+  const getDays = useContentStore((s) => s.getDays);
+  const isDayCompleted = useProgressStore((s) => s.isDayCompleted);
+  const completeDay = useProgressStore((s) => s.completeDay);
+  const uncompleteDay = useProgressStore((s) => s.uncompleteDay);
+  const schedule = useProgressStore((s) => s.examSchedules.find((e) => e.skill === skill));
+  const days = getDays(level, skill, schedule);
 
   if (days.length === 0) {
     return (

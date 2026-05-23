@@ -1,10 +1,11 @@
 import { Mic2, PenLine, BookOpen, Headphones } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { Skill } from '../../types';
 
 const SKILL_STYLE: Record<
   Skill,
-  { Icon: React.ComponentType<{ size?: number }>; text: string; bar: string; aura: string; border: string; shadow: string }
+  { Icon: LucideIcon; text: string; bar: string; aura: string; border: string; shadow: string }
 > = {
   spreken: {
     Icon: Mic2,

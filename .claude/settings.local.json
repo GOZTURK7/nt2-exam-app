@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep -rn \">[A-Za-zÇĞİÖŞÜçğışöü][A-Za-zÇĞİÖŞÜçğışöü ]\\\\{4,\\\\}<\" c:/Users/gokha/Desktop/staatsexamen/src/components/ --include=\"*.tsx\")"
+      "Bash(grep -rn \">[A-Za-zÇĞİÖŞÜçğışöü][A-Za-zÇĞİÖŞÜçğışöü ]\\\\{4,\\\\}<\" c:/Users/gokha/Desktop/staatsexamen/src/components/ --include=\"*.tsx\")",
+      "Bash(Get-ChildItem -Force)",
+      "Bash(git -C \"C:\\\\Users\\\\gokha\\\\Desktop\\\\staatsexamen\" log --oneline -20)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\gokha\\\\Desktop\\\\staatsexamen\\\\src\" -Recurse | Where-Object { $_.Extension -in @\\('.ts', '.tsx'\\) } | Select-Object -ExpandProperty FullName | Sort-Object)"
     ]
   }
 }

@@ -1,10 +1,11 @@
 import { Mic2, PenLine, BookOpen, Headphones } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { Skill } from '../../types';
 
 interface NavItem {
   skill: Skill;
-  Icon: React.ComponentType<{ size?: number }>;
+  Icon: LucideIcon;
   activeClass: string;
   indicatorClass: string;
 }

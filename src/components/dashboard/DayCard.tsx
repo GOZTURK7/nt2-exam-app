@@ -64,7 +64,7 @@ export default function DayCard({ day, isCompleted, onToggleComplete, onOpen }: 
             <CheckCircle2
               size={22}
               className="text-cyber-yellow"
-              style={{ filter: 'drop-shadow(0 0 6px rgba(232,255,71,0.5))' }}
+              style={{ filter: 'var(--drop-yellow)' }}
             />
           ) : (
             <Circle size={22} className="text-cyber-border hover:text-cyber-muted transition-colors" />

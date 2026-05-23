@@ -7,6 +7,7 @@ export interface Word {
   nl: string;
   translations: Record<SupportedLanguage, string>;
   context: string;
+  examples?: string[];
   category: string;
   isConcreteWord: boolean;
 }
@@ -22,7 +23,9 @@ export interface ExamTask {
   type: 'audio' | 'text' | 'multiple-choice';
   instructionTranslations: Record<SupportedLanguage, string>;
   durationSeconds?: number;
+  prepSeconds?: number;
   maxWords?: number;
+  imageUrls?: string[];
 }
 
 export interface ProgramDay {
@@ -34,20 +37,62 @@ export interface ProgramDay {
   examTask: ExamTask;
 }
 
+export interface ReadingQuestion {
+  id: string;
+  question: string;
+  type: 'multiple-choice' | 'open';
+  options?: string[];
+  answer: string;
+}
+
+export interface ReadingText {
+  id: string;
+  year: number;
+  title: string;
+  text: string;
+  level: Level;
+  theme: string;
+  questions?: ReadingQuestion[];
+}
+
+export interface SkillContent {
+  words: Word[];
+  phrases: Phrase[];
+  texts?: ReadingText[];
+}
+
 export interface ExamContent {
   version: string;
-  B1: Record<Skill, ProgramDay[]>;
-  B2: Record<Skill, ProgramDay[]>;
+  B1: Record<Skill, SkillContent>;
+  B2: Record<Skill, SkillContent>;
+}
+
+export interface SRSCard {
+  wordId: string;
+  interval: number;
+  easeFactor: number;
+  repetitions: number;
+  nextReviewMs: number;
+  lastRating: 0 | 1 | 2 | 3 | 4;
+  phase: 'new' | 'learning' | 'review';
+}
+
+export interface ExamSchedule {
+  skill: Skill;
+  examDate: string;        // "YYYY-MM-DD"
+  dailyStudyHours: number;
 }
 
 export interface UserProgress {
   userId: string;
   currentLevel: Level;
+  contentVersion: string;
   completedDays: string[];
-  failedWords: string[];
+  srsCards: SRSCard[];
   savedRecordings: {
     taskId: string;
-    audioBlobUrl: string;
+    audioKey: string;
     timestamp: number;
   }[];
+  examSchedules: ExamSchedule[];
 }

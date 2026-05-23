@@ -1,0 +1,348 @@
+Genel yapı iyi düşünülmüş. Özellikle:
+
+Separation of Concerns
+i18n zorunluluğu
+mobile-first yaklaşım
+Zustand store ayrımı
+PWA hedefi
+strict TypeScript
+Web Audio API detayı
+
+bunlar senior-level düşünülmüş şeyler.
+
+Ama production seviyesinde gerçekten sağlam bir Claude context’i olması için eksik olan birkaç kritik alan var. Şu anki hali “başlangıç mimarisi” gibi; uzun vadede AI’ın yanlış karar vermesini engelleyecek guardrail’ler eksik.
+
+Detaylı inceleme aşağıda:
+
+Güçlü Taraflar
+1. Scope net
+
+NT2 Programma I/II + 4 skill çok net tanımlanmış.
+
+Bu önemli çünkü Claude scope creep yapmayı sever.
+
+2. Read-only vs Read-write ayrımı çok iyi
+
+Bu baya profesyonel bir karar.
+
+Şunları önceden çözmüş oluyorsun:
+
+immutable content cache
+offline sync
+future Supabase/Firebase migration
+analytics separation
+
+Bu kısım kesinlikle doğru.
+
+3. i18n kuralı çok iyi
+
+Şu satır özellikle senior-level:
+
+translations: Record<string, string>
+
+Hardcoded language key engellenmiş.
+
+Bu ileride:
+
+NL
+AR
+FA
+UKR
+
+eklemeyi kolaylaştırır.
+
+Eksik Olan Kritik Şeyler
+1. Folder Architecture Eksik
+
+Şu an Claude kendi kafasına göre folder structure üretir.
+
+Bu ileride kaosa dönüşür.
+
+Mutlaka ekle:
+
+## Project Structure Rules
+
+src/
+  app/
+  pages/
+  modules/
+  components/
+  features/
+  store/
+  hooks/
+  services/
+  lib/
+  types/
+  i18n/
+  assets/
+
+- Shared UI components go into `components/`
+- Domain-specific logic goes into `features/`
+- Business logic must never live inside UI components
+- API/Web APIs go into `services/`
+- Reusable hooks go into `hooks/`
+
+Bu çok önemli.
+
+2. Data Model Kuralları Eksik
+
+Şu an “types.ts oluştur” demişsin ama entity architecture yok.
+
+Claude ileride inconsistent model üretir.
+
+Eklenmeli:
+
+## Data Modeling Rules
+
+- Every entity must have:
+  - `id`
+  - `createdAt`
+  - `updatedAt`
+
+- IDs must use UUID format.
+
+- Avoid deeply nested objects.
+- Prefer normalized data structures.
+- Use discriminated unions for exam task types.
+3. Component Rules Eksik
+
+Bu büyük eksik.
+
+Yoksa Claude:
+
+700 satırlık component
+inline logic
+prop drilling
+duplicate state
+
+üretir.
+
+Eklenmeli:
+
+## Component Architecture Rules
+
+- Components must be under 200 lines whenever possible.
+- Separate container and presentational components.
+- Avoid prop drilling beyond 2 levels.
+- Extract reusable logic into hooks.
+- Heavy computations must use memoization.
+- Use lazy loading for large modules.
+4. Error Handling Strategy Eksik
+
+Production app için şart.
+
+Eklenmeli:
+
+## Error Handling
+
+- All async operations must use try/catch.
+- User-friendly fallback UI is mandatory.
+- Audio recording failures must be handled gracefully.
+- Network failures must not crash the app.
+5. PWA Rules Eksik
+
+PWA demişsin ama implementation contract yok.
+
+Claude default basit setup yapabilir.
+
+Eklenmeli:
+
+## PWA Requirements
+
+- Offline-first architecture.
+- Cache exam content for offline access.
+- User progress must persist locally.
+- Service Worker required.
+- Installable on Android/iOS/Desktop.
+6. Accessibility (A11y) Eksik
+
+Bu çok kritik.
+
+Özellikle dil öğrenme platformunda.
+
+Eklenmeli:
+
+## Accessibility Requirements
+
+- All interactive elements must be keyboard accessible.
+- Proper ARIA labels are mandatory.
+- Minimum contrast ratio WCAG AA.
+- Audio controls must support screen readers.
+7. Testing Strategy Eksik
+
+Büyük eksik.
+
+Claude test yazmazsa ileride teknik borç olur.
+
+Eklenmeli:
+
+## Testing Requirements
+
+- Use Vitest + React Testing Library.
+- Critical business logic must have unit tests.
+- Zustand stores require test coverage.
+- Audio timer logic must be tested.
+8. Performance Constraints Eksik
+
+Cyberpunk UI kolayca ağırlaşır.
+
+Eklenmeli:
+
+## Performance Requirements
+
+- Minimize unnecessary re-renders.
+- Use code splitting.
+- Lazy load audio modules.
+- Avoid large animation libraries.
+- Lighthouse mobile performance target: 90+.
+9. Security Rules Eksik
+
+AI bazen kötü localStorage kullanımı yapar.
+
+Eklenmeli:
+
+## Security Rules
+
+- Never store sensitive data in localStorage.
+- Sanitize all dynamic HTML.
+- Avoid eval or unsafe browser APIs.
+- Validate all imported JSON content.
+10. State Management Contract Eksik
+
+Şu an Zustand kullanılıyor ama architecture yok.
+
+Eklenmeli:
+
+## Zustand Store Rules
+
+- Keep stores flat and modular.
+- Avoid business logic inside components.
+- Use selectors to prevent unnecessary renders.
+- Persist only UserProgress store.
+- ExamContent store must remain immutable.
+11. Audio Architecture Eksik (ÇOK KRİTİK)
+
+Spreken senin core feature’ın.
+
+Şu an çok yüzeysel yazılmış.
+
+Claude ileride memory leak yaratabilir.
+
+Eklenmeli:
+
+## Audio System Requirements
+
+- Use MediaRecorder API.
+- Proper cleanup of audio streams is mandatory.
+- Prevent microphone leaks on unmount.
+- Recording state must survive UI re-renders.
+- Waveform/timer updates should use requestAnimationFrame.
+12. Navigation Architecture Eksik
+
+SPA routing tanımlanmamış.
+
+Eklenmeli:
+
+## Routing
+
+- Use React Router.
+- Route-based code splitting is required.
+- Preserve user progress between routes.
+13. Design System Eksik
+
+Şu an renkler var ama design token yok.
+
+Eklenmeli:
+
+## Design System
+
+- Use Tailwind design tokens.
+- Avoid inline styles.
+- Use consistent spacing scale.
+- Create reusable button/input/card variants.
+14. Backend Hazırlığı Eksik
+
+Şu an local-only gibi görünüyor.
+
+Ama ileride auth/backend gelir.
+
+Şimdiden şunu ekle:
+
+## Future Backend Compatibility
+
+- Architecture must remain backend-agnostic.
+- All persistence logic should be abstracted behind services.
+- Prepare for Supabase/Firebase integration.
+15. AI Behavior Constraints Eksik (EN ÖNEMLİLERDEN)
+
+Claude bazen:
+
+gereksiz package ekler
+overengineering yapar
+context dışına çıkar
+
+Bunu engelle:
+
+## AI Development Constraints
+
+- Do not introduce unnecessary dependencies.
+- Prefer simple and maintainable solutions.
+- Avoid overengineering.
+- Follow existing architecture strictly.
+- Never refactor unrelated code.
+- Do not generate placeholder/mock business logic unless requested.
+
+Bu bölüm aşırı önemli.
+
+En Kritik Eksik
+
+Bence en kritik eksik şu:
+
+“Definition of Done”
+
+Bunu koymazsan Claude yarım işler üretir.
+
+Eklenmeli:
+
+## Definition of Done
+
+A task is complete only if:
+- TypeScript passes with zero errors.
+- ESLint passes.
+- Components are responsive.
+- i18n keys exist for all UI strings.
+- No console errors/warnings.
+- Dark mode compatibility verified.
+- Mobile usability verified.
+Ben Olsam Şunu da Eklerdim
+Dependency Rules
+## Dependency Policy
+
+Preferred:
+- Native browser APIs
+- Lightweight libraries
+- Headless UI approaches
+
+Avoid unless necessary:
+- Heavy UI frameworks
+- Large animation libraries
+- Complex state abstractions
+Genel Skor
+
+Şu anki hali:
+
+7/10 senior prompt
+
+Eksikler tamamlanırsa:
+
+9.5/10 production-grade AI engineering spec olur.
+
+Özellikle:
+
+architecture constraints
+AI constraints
+testing
+audio lifecycle
+definition of done
+
+eklenirse Claude çok daha stabil kod üretir.

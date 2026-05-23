@@ -5,14 +5,14 @@ import { useProgressStore } from '../../store/useProgressStore';
 import { useContentStore } from '../../store/useContentStore';
 import type { ProgramDay, Skill } from '../../types';
 import DayList from './DayList';
+import CountdownClock from './CountdownClock';
+import ExamSetupCard from './ExamSetupCard';
 
 interface DashboardProps {
   activeSkill: Skill;
   onSkillChange: (skill: Skill) => void;
   onDaySelect: (day: ProgramDay) => void;
 }
-
-const EXAM_DATE = new Date('2026-06-24');
 
 const SKILL_META: Record<Skill, { icon: ReactNode; colorClass: string }> = {
   spreken:   { icon: <Mic2 size={15} />,       colorClass: 'border-cyber-yellow text-cyber-yellow bg-cyber-yellow/10' },
@@ -21,18 +21,14 @@ const SKILL_META: Record<Skill, { icon: ReactNode; colorClass: string }> = {
   luisteren: { icon: <Headphones size={15} />, colorClass: 'border-cyber-purple text-cyber-purple bg-cyber-purple/10' },
 };
 
-function daysUntilExam(): number {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return Math.max(0, Math.ceil((EXAM_DATE.getTime() - today.getTime()) / 86_400_000));
-}
-
 export default function Dashboard({ activeSkill, onDaySelect }: DashboardProps) {
   const { t } = useTranslation();
-  const { currentLevel, completedDays } = useProgressStore();
-  const { getDays } = useContentStore();
+  const currentLevel    = useProgressStore((s) => s.currentLevel);
+  const completedDays   = useProgressStore((s) => s.completedDays);
+  const getExamSchedule = useProgressStore((s) => s.getExamSchedule);
+  const getDays         = useContentStore((s) => s.getDays);
 
-  const countdown = daysUntilExam();
+  const schedule = getExamSchedule(activeSkill);
   const days = getDays(currentLevel, activeSkill);
   const completedCount = completedDays.filter((id) =>
     id.startsWith(`${currentLevel}_${activeSkill}_`)
@@ -40,13 +36,43 @@ export default function Dashboard({ activeSkill, onDaySelect }: DashboardProps) 
 
   const { icon, colorClass } = SKILL_META[activeSkill];
 
+  // Intensity calculation
+  let intensityNode: ReactNode = null;
+  if (schedule) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const examDay = new Date(`${schedule.examDate}T00:00:00`);
+    const daysLeft = Math.max(0, Math.ceil((examDay.getTime() - today.getTime()) / 86_400_000));
+    const remaining = days.length - completedCount;
+
+    if (daysLeft > 0) {
+      const perDay = remaining / daysLeft;
+      const perDayStr = perDay.toFixed(1);
+      const color =
+        perDay > 1.5 ? 'text-cyber-orange' :
+        perDay > 1.0 ? 'text-cyber-yellow' :
+        'text-cyber-blue';
+
+      intensityNode = (
+        <div className="flex items-center justify-between mb-3 px-1">
+          <span className="font-mono text-[9px] text-cyber-muted uppercase tracking-widest">
+            {t('dashboard.intensityLabel')}
+          </span>
+          <span className={`font-mono text-xs font-bold ${color}`}>
+            {perDayStr} {t('dashboard.perDay')} · {schedule.dailyStudyHours} {t('dashboard.hoursPerDay')}
+          </span>
+        </div>
+      );
+    }
+  }
+
   return (
     <div className="max-w-lg mx-auto px-4 py-6">
 
-      {/* ── Compact header ── */}
+      {/* ── Hero header ── */}
       <div className="flex items-start justify-between mb-5">
         <div>
-          <p className="font-mono text-[9px] text-cyber-muted uppercase tracking-[0.22em]">
+          <p className="font-mono text-[9px] text-cyber-royal/80 uppercase tracking-[0.22em]">
             {t('dashboard.subtitle')}
           </p>
           <h2 className="text-xl font-black text-cyber-text mt-1 leading-tight">
@@ -57,27 +83,28 @@ export default function Dashboard({ activeSkill, onDaySelect }: DashboardProps) 
           </p>
         </div>
 
-        {/* Countdown */}
+        {/* Countdown — dynamic or prompt */}
         <div className="text-right ml-4 shrink-0">
-          <p className="font-mono text-[9px] text-cyber-muted uppercase tracking-widest">
-            {t('dashboard.examIn')}
-          </p>
-          <div className="flex items-baseline gap-1 mt-1 justify-end">
-            <span
-              className="text-4xl font-black text-cyber-yellow"
-              style={{ textShadow: '0 0 16px rgba(232,255,71,0.45)' }}
-            >
-              {countdown}
-            </span>
-          </div>
-          <p className="font-mono text-[9px] text-cyber-muted mt-0.5">
-            {t('dashboard.days')}
-          </p>
+          {schedule ? (
+            <CountdownClock targetDate={schedule.examDate} />
+          ) : (
+            <div className="flex flex-col items-end gap-1">
+              <p className="font-mono text-[9px] text-cyber-muted uppercase tracking-widest">
+                {t('dashboard.countdown')}
+              </p>
+              <p className="font-mono text-[10px] text-cyber-muted italic">
+                {t('dashboard.noExamDate')}
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Divider */}
-      <div className="h-px bg-gradient-to-r from-transparent via-cyber-border to-transparent mb-5" />
+      <div className="h-px bg-gradient-to-r from-transparent via-cyber-royal/40 to-transparent mb-5" />
+
+      {/* ── Exam setup card ── */}
+      <ExamSetupCard skill={activeSkill} />
 
       {/* ── Active skill header ── */}
       <div className="flex items-center justify-between mb-4">
@@ -99,6 +126,9 @@ export default function Dashboard({ activeSkill, onDaySelect }: DashboardProps) 
           </p>
         </div>
       </div>
+
+      {/* ── Intensity strip ── */}
+      {intensityNode}
 
       {/* ── Day list ── */}
       <DayList skill={activeSkill} level={currentLevel} onDaySelect={onDaySelect} />

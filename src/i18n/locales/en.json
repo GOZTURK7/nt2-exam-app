@@ -16,6 +16,20 @@
     "modules": "Modules",
     "statistics": "Statistics",
     "progress": "Progress",
+    "countdown": "COUNTDOWN",
+    "daysUnit": "days",
+    "hoursUnit": "hrs",
+    "minutesUnit": "min",
+    "secondsUnit": "sec",
+    "setExamDate": "Set Exam Date",
+    "examDate": "Exam Date",
+    "dailyHours": "Daily Study Hours",
+    "edit": "Edit",
+    "perDay": "lessons/day",
+    "intensityLabel": "Intensity",
+    "noExamDate": "No exam date set",
+    "examPassed": "Exam completed!",
+    "hoursPerDay": "hrs/day",
     "stats": {
       "streak": "Day Streak",
       "completed": "Completed",
@@ -93,21 +107,45 @@
       "saved": "Saved"
     },
     "concrete": "Stress word",
-    "concreteHint": "Concrete word often forgotten under exam stress"
+    "concreteHint": "Concrete word often forgotten under exam stress",
+    "dayCompleted": "Day Completed",
+    "prevRecording": "Previous Recording"
+  },
+  "exam": {
+    "practiceImages": "Practice images — describe what you see"
   },
   "study": {
     "tabs": {
-      "flashcard": "Flashcards",
-      "exam": "Exam Simulation"
+      "flashcard": "Cards",
+      "exam": "Exam",
+      "dictionary": "Dictionary"
     }
   },
   "flashcard": {
     "flip": "Flip",
-    "correct": "Correct",
-    "wrong": "Wrong",
+    "again": "Again",
+    "hard": "Hard",
+    "good": "Good",
+    "easy": "Easy",
+    "correct": "Got it",
+    "wrong": "Missed it",
     "concrete": "Stress Word",
     "category": "Category",
     "example": "Example",
-    "showTranslation": "Show Translation"
+    "examples": "Example Sentences",
+    "tapToFlip": "Tap to see translation",
+    "showTranslation": "Show Translation",
+    "prev": "Prev",
+    "next": "Next",
+    "of": "/",
+    "phrases": "Speaking Phrases",
+    "allWords": "All words"
+  },
+  "dictionary": {
+    "title": "Dictionary",
+    "search": "Search words...",
+    "noResults": "No results found",
+    "allCategories": "All Categories",
+    "wordCount": "words"
   }
 }

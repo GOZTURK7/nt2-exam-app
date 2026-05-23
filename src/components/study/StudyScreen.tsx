@@ -1,20 +1,30 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft } from 'lucide-react';
-import type { ProgramDay } from '../../types';
+import type { ProgramDay, Skill } from '../../types';
+import { useProgressStore, buildDayId } from '../../store/useProgressStore';
 import FlashcardTab from './FlashcardTab';
 import ExamTab from './ExamTab';
+import VocabDictionary from './VocabDictionary';
 
-type Tab = 'flashcard' | 'exam';
+type Tab = 'flashcard' | 'exam' | 'dictionary';
 
 interface StudyScreenProps {
   day: ProgramDay;
+  skill: Skill;
   onBack: () => void;
 }
 
-export default function StudyScreen({ day, onBack }: StudyScreenProps) {
+export default function StudyScreen({ day, skill, onBack }: StudyScreenProps) {
   const { t, i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState<Tab>('flashcard');
+
+  const currentLevel = useProgressStore((s) => s.currentLevel);
+  const completeDay = useProgressStore((s) => s.completeDay);
+  const isDayCompleted = useProgressStore((s) => s.isDayCompleted);
+
+  const dayId = buildDayId(currentLevel, skill, day.dayNumber);
+  const isCompleted = isDayCompleted(dayId);
 
   const lang = i18n.language as 'tr' | 'en';
   const title = day.titleTranslations[lang] ?? day.titleTranslations['en'] ?? '';
@@ -39,6 +49,9 @@ export default function StudyScreen({ day, onBack }: StudyScreenProps) {
           <div className="min-w-0">
             <p className="font-mono text-[9px] text-cyber-muted uppercase tracking-widest">
               {t('common.day')} {day.dayNumber}
+              {isCompleted && (
+                <span className="ml-2 text-cyber-green">✓</span>
+              )}
             </p>
             <h2 className="text-sm font-bold text-cyber-text leading-snug truncate">
               {title}
@@ -48,7 +61,7 @@ export default function StudyScreen({ day, onBack }: StudyScreenProps) {
 
         {/* Tab bar */}
         <div className="flex max-w-lg mx-auto px-4 border-t border-cyber-border/40">
-          {(['flashcard', 'exam'] as Tab[]).map((tab) => (
+          {(['flashcard', 'exam', 'dictionary'] as Tab[]).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -61,7 +74,7 @@ export default function StudyScreen({ day, onBack }: StudyScreenProps) {
                 }
               `}
             >
-              {tab === 'flashcard' ? t('study.tabs.flashcard') : t('study.tabs.exam')}
+              {t(`study.tabs.${tab}`)}
             </button>
           ))}
         </div>
@@ -69,10 +82,15 @@ export default function StudyScreen({ day, onBack }: StudyScreenProps) {
 
       {/* ── Tab content ── */}
       <main className="flex-1 overflow-y-auto pb-8">
-        {activeTab === 'flashcard'
-          ? <FlashcardTab day={day} />
-          : <ExamTab day={day} />
-        }
+        {activeTab === 'flashcard' && <FlashcardTab day={day} />}
+        {activeTab === 'exam' && (
+          <ExamTab
+            day={day}
+            isCompleted={isCompleted}
+            onComplete={() => completeDay(dayId)}
+          />
+        )}
+        {activeTab === 'dictionary' && <VocabDictionary />}
       </main>
 
     </div>
