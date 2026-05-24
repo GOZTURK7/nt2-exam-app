@@ -94,8 +94,7 @@ export default function FlashcardTab({ day }: FlashcardTabProps) {
       {/* Flip card */}
       <div
         style={{ perspective: '1200px' }}
-        className="w-full cursor-pointer select-none"
-        onClick={() => setFlipped((f) => !f)}
+        className="w-full select-none relative"
       >
         <div
           style={{
@@ -168,6 +167,27 @@ export default function FlashcardTab({ day }: FlashcardTabProps) {
               </div>
             ) : null}
           </div>
+        </div>
+
+        {/* Tap zones: left = prev, center = flip, right = next */}
+        <div className="absolute inset-0 flex">
+          <button
+            onClick={() => goTo(cardIndex - 1)}
+            disabled={cardIndex === 0}
+            aria-label="Previous card"
+            className="w-1/4 h-full disabled:cursor-default"
+          />
+          <button
+            onClick={() => setFlipped((f) => !f)}
+            aria-label="Flip card"
+            className="flex-1 h-full cursor-pointer"
+          />
+          <button
+            onClick={() => goTo(cardIndex + 1)}
+            disabled={cardIndex === total - 1}
+            aria-label="Next card"
+            className="w-1/4 h-full disabled:cursor-default"
+          />
         </div>
       </div>
 
