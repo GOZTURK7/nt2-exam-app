@@ -95,7 +95,7 @@ export default function FlashcardTab({ day }: FlashcardTabProps) {
       <div
         style={{ perspective: '1200px' }}
         className="w-full cursor-pointer select-none"
-        onClick={() => !flipped && setFlipped(true)}
+        onClick={() => setFlipped((f) => !f)}
       >
         <div
           style={{
@@ -136,7 +136,6 @@ export default function FlashcardTab({ day }: FlashcardTabProps) {
           <div
             style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
             className="absolute inset-0 rounded-2xl border border-cyber-blue/50 bg-cyber-surface flex flex-col p-6 overflow-auto gap-3"
-            onClick={(e) => e.stopPropagation()}
           >
             <div>
               <p className="font-mono text-[8px] text-cyber-muted/60 uppercase tracking-widest mb-1">

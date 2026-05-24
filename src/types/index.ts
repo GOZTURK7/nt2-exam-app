@@ -77,6 +77,21 @@ export interface SRSCard {
   phase: 'new' | 'learning' | 'review';
 }
 
+export type SimDeel = 'Deel 1' | 'Deel 2' | 'Deel 3';
+
+export interface ExamSimTask {
+  id: string;
+  deel: SimDeel;
+  topic: string;
+  instructionNl: string;
+  imageUrls: string[];       // picsum or real images
+  imageLabels: string[];     // short label per image ("Plaatje 1: …") for accessibility
+  tableData: string | null;
+  prepSeconds: number;
+  speakSeconds: number;
+  modelAnswer: string;
+}
+
 export interface ExamSchedule {
   skill: Skill;
   examDate: string;        // "YYYY-MM-DD"

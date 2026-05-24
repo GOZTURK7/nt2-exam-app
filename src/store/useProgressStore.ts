@@ -35,6 +35,10 @@ interface ProgressStore extends UserProgress {
   setExamSchedule: (skill: Skill, examDate: string, dailyStudyHours: number) => void;
   getExamSchedule: (skill: Skill) => ExamSchedule | undefined;
 
+  // Simulation progress (0 = not started, n = next task index, total = finished)
+  simTaskIdx: number;
+  setSimTaskIdx: (idx: number) => void;
+
   // Reset
   resetProgress: () => void;
 }
@@ -133,8 +137,12 @@ export const useProgressStore = create<ProgressStore>()(
 
       getExamSchedule: (skill) => get().examSchedules.find((s) => s.skill === skill),
 
+      // ── Simulation progress ──────────────────────────────────────────────
+      simTaskIdx: 0,
+      setSimTaskIdx: (idx) => set({ simTaskIdx: idx }),
+
       // ── Reset ────────────────────────────────────────────────────────────
-      resetProgress: () => set({ ...DEFAULT_STATE, currentLevel: get().currentLevel }),
+      resetProgress: () => set({ ...DEFAULT_STATE, currentLevel: get().currentLevel, simTaskIdx: 0 }),
     }),
     {
       name: 'nt2-progress',
@@ -193,6 +201,7 @@ export const useProgressStore = create<ProgressStore>()(
         srsCards: state.srsCards,
         savedRecordings: state.savedRecordings,
         examSchedules: state.examSchedules,
+        simTaskIdx: state.simTaskIdx,
       }),
     }
   )

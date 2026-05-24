@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CalendarDays, ChevronDown, ChevronUp } from 'lucide-react';
+import { CalendarDays, ChevronDown, ChevronUp, Mic2, PenLine, BookOpen, Headphones } from 'lucide-react';
 import { useProgressStore } from '../../store/useProgressStore';
 import type { Skill } from '../../types';
 
@@ -9,10 +9,19 @@ interface ExamSetupCardProps {
   forceOpen?: boolean;
 }
 
+const SKILL_META: Record<Skill, { Icon: typeof Mic2; color: string; label: { tr: string; en: string } }> = {
+  spreken:   { Icon: Mic2,       color: 'text-cyber-yellow', label: { tr: 'Konuşma',  en: 'Speaking'  } },
+  schrijven: { Icon: PenLine,    color: 'text-cyber-blue',   label: { tr: 'Yazma',    en: 'Writing'   } },
+  lezen:     { Icon: BookOpen,   color: 'text-cyber-green',  label: { tr: 'Okuma',    en: 'Reading'   } },
+  luisteren: { Icon: Headphones, color: 'text-cyber-purple', label: { tr: 'Dinleme',  en: 'Listening' } },
+};
+
 export default function ExamSetupCard({ skill, forceOpen = false }: ExamSetupCardProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language as 'tr' | 'en';
   const setExamSchedule = useProgressStore((s) => s.setExamSchedule);
   const getExamSchedule = useProgressStore((s) => s.getExamSchedule);
+  const { Icon, color, label } = SKILL_META[skill];
 
   const existing = getExamSchedule(skill);
 
@@ -35,9 +44,13 @@ export default function ExamSetupCard({ skill, forceOpen = false }: ExamSetupCar
         onClick={() => setOpen((v) => !v)}
       >
         <div className="flex items-center gap-2">
-          <CalendarDays size={14} className="text-cyber-yellow" />
-          <span className="font-mono text-xs font-bold text-cyber-text uppercase tracking-wider">
-            {t('dashboard.examDate')}
+          <CalendarDays size={14} className="text-cyber-muted" />
+          <Icon size={13} className={color} />
+          <span className={`font-mono text-xs font-bold uppercase tracking-wider ${color}`}>
+            {lang === 'tr' ? label.tr : label.en}
+          </span>
+          <span className="font-mono text-[9px] text-cyber-muted/60 uppercase tracking-wider">
+            · {t('dashboard.examDate')}
           </span>
         </div>
         <div className="flex items-center gap-3">

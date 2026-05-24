@@ -30,7 +30,7 @@ export default function StudyScreen({ day, skill, onBack }: StudyScreenProps) {
   const title = day.titleTranslations[lang] ?? day.titleTranslations['en'] ?? '';
 
   return (
-    <div className="min-h-dvh flex flex-col bg-cyber-dark">
+    <div className="flex flex-col bg-cyber-dark">
 
       {/* ── Study header ── */}
       <header className="sticky top-0 z-50 bg-cyber-surface/95 backdrop-blur border-b border-cyber-border">
