@@ -21,11 +21,11 @@ export default function DayList({ skill, level, onDaySelect }: DayListProps) {
 
   if (days.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 gap-3">
-        <div className="w-12 h-12 rounded-full bg-cyber-card border border-cyber-border flex items-center justify-center">
-          <span className="text-2xl text-cyber-muted select-none">—</span>
+      <div className="flex flex-col items-center justify-center py-20 gap-3">
+        <div className="w-11 h-11 rounded-full bg-cyber-card border border-cyber-border flex items-center justify-center">
+          <span className="text-xl text-cyber-muted select-none">—</span>
         </div>
-        <p className="font-mono text-xs text-cyber-muted uppercase tracking-widest">
+        <p className="text-xs font-medium text-cyber-muted">
           {t('common.empty')}
         </p>
       </div>

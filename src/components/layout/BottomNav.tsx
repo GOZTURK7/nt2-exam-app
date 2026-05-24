@@ -43,7 +43,7 @@ interface BottomNavProps {
 
 export default function BottomNav({ activeTab, onTabChange, lang }: BottomNavProps) {
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-cyber-surface/95 backdrop-blur border-t border-cyber-border safe-area-inset-bottom">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-cyber-surface/95 backdrop-blur-md border-t border-cyber-border safe-area-inset-bottom">
       <div className="flex items-stretch max-w-lg mx-auto">
         {NAV_ITEMS.map(({ tab, Icon, label, activeClass, indicatorClass }) => {
           const isActive = activeTab === tab;
@@ -52,16 +52,16 @@ export default function BottomNav({ activeTab, onTabChange, lang }: BottomNavPro
               key={tab}
               onClick={() => onTabChange(tab)}
               className={`
-                relative flex-1 flex flex-col items-center justify-center gap-1
+                relative flex-1 flex flex-col items-center justify-center gap-1.5
                 py-3 transition-all duration-200 active:scale-95
                 ${isActive ? activeClass : 'text-cyber-muted hover:text-cyber-text'}
               `}
             >
               {isActive && (
-                <span className={`absolute top-0 left-1/2 -translate-x-1/2 h-0.5 w-8 rounded-b-full ${indicatorClass}`} />
+                <span className={`absolute top-0 left-1/2 -translate-x-1/2 h-0.5 w-6 rounded-b-full ${indicatorClass}`} />
               )}
-              <Icon size={20} />
-              <span className="font-mono text-[9px] uppercase tracking-widest">
+              <Icon size={19} />
+              <span className="text-[10px] font-medium">
                 {lang === 'tr' ? label.tr : label.en}
               </span>
             </button>

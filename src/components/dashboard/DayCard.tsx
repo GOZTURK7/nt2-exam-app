@@ -11,9 +11,9 @@ interface DayCardProps {
 }
 
 function examTypeStyle(examType: string) {
-  if (examType.includes('1')) return 'border-cyber-blue text-cyber-blue bg-cyber-blue/10';
-  if (examType.includes('3')) return 'border-cyber-orange text-cyber-orange bg-cyber-orange/10';
-  return 'border-cyber-yellow text-cyber-yellow bg-cyber-yellow/10';
+  if (examType.includes('1')) return 'border-cyber-blue/40 text-cyber-blue bg-cyber-blue/8';
+  if (examType.includes('3')) return 'border-cyber-orange/40 text-cyber-orange bg-cyber-orange/8';
+  return 'border-cyber-yellow/40 text-cyber-yellow bg-cyber-yellow/8';
 }
 
 export default function DayCard({ day, isCompleted, onToggleComplete, onOpen }: DayCardProps) {
@@ -30,10 +30,11 @@ export default function DayCard({ day, isCompleted, onToggleComplete, onOpen }: 
       onClick={onOpen}
       onKeyDown={(e) => e.key === 'Enter' && onOpen()}
       className={`
-        bg-cyber-card border rounded-2xl p-4 transition-all duration-200 cursor-pointer
+        bg-cyber-card border rounded-xl p-4 transition-all duration-200 cursor-pointer
+        shadow-card hover:shadow-card-hover
         ${isCompleted
-          ? 'border-cyber-yellow/30 bg-cyber-yellow/[0.03] hover:border-cyber-yellow/50'
-          : 'border-cyber-border hover:border-cyber-border/60 hover:bg-cyber-card/80'
+          ? 'border-cyber-border/50 opacity-70'
+          : 'border-cyber-border hover:border-cyber-muted/40'
         }
         active:scale-[0.98]
       `}
@@ -41,12 +42,12 @@ export default function DayCard({ day, isCompleted, onToggleComplete, onOpen }: 
       {/* Top row: day badge + exam type tag + complete toggle */}
       <div className="flex items-start justify-between gap-2 mb-3">
         <div className="flex items-center gap-2 flex-wrap min-w-0">
-          <span className="font-mono text-[10px] font-bold text-cyber-muted tracking-widest uppercase shrink-0">
+          <span className="text-[10px] font-semibold text-cyber-muted tracking-wider uppercase shrink-0">
             {t('common.day')} {day.dayNumber}
           </span>
           <span
             className={`
-              font-mono text-[9px] font-bold uppercase tracking-wider
+              text-[9px] font-semibold uppercase tracking-wide
               px-2 py-0.5 rounded-md border
               ${examTypeStyle(day.examType)}
             `}
@@ -61,13 +62,9 @@ export default function DayCard({ day, isCompleted, onToggleComplete, onOpen }: 
           className="shrink-0 transition-transform active:scale-90 mt-0.5"
         >
           {isCompleted ? (
-            <CheckCircle2
-              size={22}
-              className="text-cyber-yellow"
-              style={{ filter: 'var(--drop-yellow)' }}
-            />
+            <CheckCircle2 size={21} className="text-cyber-yellow" />
           ) : (
-            <Circle size={22} className="text-cyber-border hover:text-cyber-muted transition-colors" />
+            <Circle size={21} className="text-cyber-border hover:text-cyber-muted transition-colors" />
           )}
         </button>
       </div>
@@ -75,7 +72,7 @@ export default function DayCard({ day, isCompleted, onToggleComplete, onOpen }: 
       {/* Title */}
       <h3
         className={`
-          text-sm font-bold leading-snug mb-3
+          text-sm font-semibold leading-snug mb-3
           ${isCompleted ? 'text-cyber-muted line-through' : 'text-cyber-text'}
         `}
       >
@@ -84,13 +81,13 @@ export default function DayCard({ day, isCompleted, onToggleComplete, onOpen }: 
 
       {/* Stats row */}
       <div className="flex items-center gap-4 flex-wrap">
-        <StatChip icon={<BookOpen size={12} />} value={day.vocabulary.length} color="text-cyber-blue" tooltip={t('spreken.vocab')} />
-        <StatChip icon={<MessageSquare size={12} />} value={day.functionalPhrases.length} color="text-cyber-purple" tooltip={t('spreken.phrases')} />
+        <StatChip icon={<BookOpen size={11} />} value={day.vocabulary.length} color="text-cyber-blue" tooltip={t('spreken.vocab')} />
+        <StatChip icon={<MessageSquare size={11} />} value={day.functionalPhrases.length} color="text-cyber-purple" tooltip={t('spreken.phrases')} />
         {day.examTask.durationSeconds != null && (
-          <StatChip icon={<Timer size={12} />} value={`${day.examTask.durationSeconds}s`} color="text-cyber-orange" tooltip={t('spreken.examTask')} />
+          <StatChip icon={<Timer size={11} />} value={`${day.examTask.durationSeconds}s`} color="text-cyber-orange" tooltip={t('spreken.examTask')} />
         )}
         {concreteCount > 0 && (
-          <StatChip icon={<Zap size={12} />} value={concreteCount} color="text-cyber-yellow" tooltip={t('spreken.concrete')} />
+          <StatChip icon={<Zap size={11} />} value={concreteCount} color="text-cyber-yellow" tooltip={t('spreken.concrete')} />
         )}
       </div>
     </div>
@@ -101,12 +98,12 @@ function StatChip({ icon, value, color, tooltip }: { icon: ReactNode; value: str
   return (
     <div className={`relative group flex items-center gap-1 ${color}`}>
       {icon}
-      <span className="font-mono text-[11px] font-bold">{value}</span>
+      <span className="text-[11px] font-semibold">{value}</span>
       <div className="
         absolute top-full left-1/2 -translate-x-1/2 mt-2
-        px-2 py-1 rounded-md
-        bg-[#0d1a2a] border border-cyber-border
-        font-mono text-[10px] text-cyber-text whitespace-nowrap
+        px-2 py-1 rounded-lg
+        bg-cyber-surface border border-cyber-border shadow-card
+        text-[10px] font-medium text-cyber-text whitespace-nowrap
         opacity-0 group-hover:opacity-100
         transition-opacity duration-150
         pointer-events-none z-20

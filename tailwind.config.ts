@@ -21,6 +21,7 @@ const config: Config = {
         },
       },
       fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
       },
       boxShadow: {
@@ -30,6 +31,8 @@ const config: Config = {
         'neon-orange': '0 0 16px var(--shadow-orange)',
         'neon-royal':  '0 0 20px var(--shadow-royal)',
         'neon-green':  '0 0 16px var(--shadow-green)',
+        'card':        '0 1px 3px 0 rgba(0,0,0,0.06), 0 1px 2px -1px rgba(0,0,0,0.04)',
+        'card-hover':  '0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.04)',
       },
       backgroundImage: {
         'cyber-grid': `

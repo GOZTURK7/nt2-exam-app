@@ -3,8 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#f0f4f9" />
+    <meta name="theme-color" content="#f9fafb" />
     <title>NT2 Staatsexamen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Prevent flash of wrong theme on page load -->
     <script>
       (function () {
@@ -15,7 +18,7 @@
             if (state && state.state && state.state.isDark) {
               document.documentElement.setAttribute('data-theme', 'dark');
               document.querySelector('meta[name="theme-color"]')
-                && document.querySelector('meta[name="theme-color"]').setAttribute('content', '#04080f');
+                && document.querySelector('meta[name="theme-color"]').setAttribute('content', '#111827');
             }
           }
         } catch (e) {}

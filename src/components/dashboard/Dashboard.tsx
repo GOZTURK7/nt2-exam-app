@@ -13,10 +13,10 @@ interface DashboardProps {
 }
 
 const SKILL_META: Record<Skill, { icon: ReactNode; colorClass: string }> = {
-  spreken:   { icon: <Mic2 size={15} />,       colorClass: 'border-cyber-yellow text-cyber-yellow bg-cyber-yellow/10' },
-  schrijven: { icon: <PenLine size={15} />,    colorClass: 'border-cyber-blue text-cyber-blue bg-cyber-blue/10' },
-  lezen:     { icon: <BookOpen size={15} />,   colorClass: 'border-cyber-green text-cyber-green bg-cyber-green/10' },
-  luisteren: { icon: <Headphones size={15} />, colorClass: 'border-cyber-purple text-cyber-purple bg-cyber-purple/10' },
+  spreken:   { icon: <Mic2 size={14} />,       colorClass: 'border-cyber-yellow/50 text-cyber-yellow bg-cyber-yellow/10' },
+  schrijven: { icon: <PenLine size={14} />,    colorClass: 'border-cyber-blue/50 text-cyber-blue bg-cyber-blue/10' },
+  lezen:     { icon: <BookOpen size={14} />,   colorClass: 'border-cyber-green/50 text-cyber-green bg-cyber-green/10' },
+  luisteren: { icon: <Headphones size={14} />, colorClass: 'border-cyber-purple/50 text-cyber-purple bg-cyber-purple/10' },
 };
 
 const ALL_SKILLS: Skill[] = ['spreken', 'schrijven', 'lezen', 'luisteren'];
@@ -36,11 +36,13 @@ export default function Dashboard({ activeSkill, onSkillChange, onDaySelect }: D
     id.startsWith(`${currentLevel}_${activeSkill}_`)
   ).length;
 
+  const activeColor = SKILL_META[activeSkill].colorClass.split(' ')[1];
+
   return (
-    <div className="max-w-lg mx-auto px-4 pt-4 pb-6">
+    <div className="max-w-lg mx-auto px-4 pt-5 pb-6">
 
       {/* ── Skill selector tabs ── */}
-      <div className="flex gap-1.5 mb-5 overflow-x-auto pb-1 -mx-1 px-1">
+      <div className="flex gap-2 mb-6 overflow-x-auto pb-1 -mx-1 px-1">
         {ALL_SKILLS.map((skill) => {
           const { icon, colorClass } = SKILL_META[skill];
           const isActive = skill === activeSkill;
@@ -49,9 +51,12 @@ export default function Dashboard({ activeSkill, onSkillChange, onDaySelect }: D
               key={skill}
               onClick={() => onSkillChange(skill)}
               className={`
-                flex items-center gap-1.5 px-3 py-1.5 rounded-lg border shrink-0
-                font-mono text-xs font-bold uppercase tracking-wider transition-all
-                ${isActive ? colorClass : 'border-cyber-border text-cyber-muted hover:border-cyber-muted/50'}
+                flex items-center gap-1.5 px-3.5 py-2 rounded-xl border shrink-0
+                text-xs font-semibold transition-all duration-200
+                ${isActive
+                  ? colorClass
+                  : 'border-cyber-border text-cyber-muted bg-transparent hover:border-cyber-muted/40 hover:text-cyber-text'
+                }
               `}
             >
               {icon}
@@ -63,11 +68,11 @@ export default function Dashboard({ activeSkill, onSkillChange, onDaySelect }: D
 
       {/* ── Progress header ── */}
       <div className="flex items-center justify-between mb-4">
-        <p className="font-mono text-[9px] text-cyber-muted uppercase tracking-widest">
+        <p className="text-xs font-medium text-cyber-muted">
           {lang === 'tr' ? 'Ders Günleri' : 'Study Days'}
         </p>
-        <p className="font-mono text-sm font-bold text-cyber-text">
-          <span className={SKILL_META[activeSkill].colorClass.split(' ')[1]}>{completedCount}</span>
+        <p className="text-sm font-semibold text-cyber-text">
+          <span className={activeColor}>{completedCount}</span>
           <span className="text-cyber-muted"> / {days.length}</span>
         </p>
       </div>

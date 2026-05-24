@@ -20,14 +20,14 @@ export default function AppBar() {
   const isB2 = currentLevel === 'B2';
 
   return (
-    <header className="sticky top-0 z-50 bg-cyber-dark/90 backdrop-blur-md border-b border-cyber-border">
+    <header className="sticky top-0 z-50 bg-cyber-surface/95 backdrop-blur-md border-b border-cyber-border">
       <div className="flex items-center justify-between max-w-lg mx-auto px-4 py-3">
         {/* Logo */}
         <div>
-          <p className="font-mono text-[9px] text-cyber-muted tracking-[0.22em] uppercase">
+          <p className="text-[10px] font-medium text-cyber-muted tracking-widest uppercase">
             {t('appbar.brand')}
           </p>
-          <h1 className="text-sm font-bold text-cyber-text leading-none mt-0.5">
+          <h1 className="text-sm font-semibold text-cyber-text leading-tight mt-0.5">
             {t('appbar.title')}
           </h1>
         </div>
@@ -38,11 +38,11 @@ export default function AppBar() {
             onClick={toggleLevel}
             aria-label={t('level.switchLabel')}
             className={`
-              px-3 py-1.5 rounded-lg border font-mono text-xs font-bold
-              tracking-wider transition-all duration-200 active:scale-95
+              px-3 py-1.5 rounded-xl border text-xs font-semibold
+              transition-all duration-200 active:scale-95
               ${isB2
-                ? 'border-cyber-yellow text-cyber-yellow bg-cyber-yellow/10 shadow-neon-yellow'
-                : 'border-cyber-blue text-cyber-blue bg-cyber-blue/10 shadow-neon-blue'
+                ? 'border-cyber-yellow/40 text-cyber-yellow bg-cyber-yellow/8'
+                : 'border-cyber-blue/40 text-cyber-blue bg-cyber-blue/8'
               }
             `}
           >
@@ -54,9 +54,9 @@ export default function AppBar() {
             onClick={toggleLang}
             aria-label={i18n.language === 'tr' ? 'Switch to English' : 'Türkçeye geç'}
             className="
-              px-3 py-1.5 rounded-lg border border-cyber-border
-              text-cyber-muted hover:border-cyber-royal hover:text-cyber-royal
-              font-mono text-xs font-bold tracking-wider
+              px-3 py-1.5 rounded-xl border border-cyber-border
+              text-cyber-muted hover:text-cyber-text hover:border-cyber-muted/60
+              text-xs font-medium
               transition-all duration-200 active:scale-95
             "
           >
@@ -68,8 +68,8 @@ export default function AppBar() {
             onClick={toggleTheme}
             aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
             className="
-              p-1.5 rounded-lg border border-cyber-border
-              text-cyber-muted hover:border-cyber-royal hover:text-cyber-royal
+              p-1.5 rounded-xl border border-cyber-border
+              text-cyber-muted hover:text-cyber-text hover:border-cyber-muted/60
               transition-all duration-200 active:scale-95
             "
           >
