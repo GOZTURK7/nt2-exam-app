@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 260" style="background:#0d1a2a;font-family:system-ui,sans-serif">
+  <text x="180" y="22" font-size="11" fill="#f5c432" text-anchor="middle" font-family="monospace" font-weight="bold">3 · PAKKET OPHALEN</text>
+  <!-- Own door -->
+  <rect x="60" y="60" width="110" height="155" rx="5" fill="#0a1828" stroke="#f5c432" stroke-width="2"/>
+  <circle cx="155" cy="140" r="6" fill="#172840" stroke="#6d8faa" stroke-width="1.5"/>
+  <text x="95" y="90" font-size="14" fill="#6d8faa" text-anchor="middle" font-family="monospace" font-weight="bold">40</text>
+  <!-- Person (main character) at neighbor door -->
+  <circle cx="260" cy="110" r="22" fill="#d8ebff" opacity="0.1" stroke="#f5c432" stroke-width="2"/>
+  <!-- Smile -->
+  <path d="M 250 115 Q 260 122 270 115" stroke="#d8ebff" stroke-width="1.5" fill="none" opacity="0.8"/>
+  <!-- Neighbor door (42) at right -->
+  <rect x="195" y="80" width="90" height="125" rx="4" fill="#0a1828" stroke="#30d080" stroke-width="1.5"/>
+  <circle cx="275" cy="142" r="5" fill="#172840" stroke="#6d8faa" stroke-width="1.5"/>
+  <text x="230" y="105" font-size="12" fill="#6d8faa" text-anchor="middle" font-family="monospace" font-weight="bold">42</text>
+  <!-- Package being picked up, held in arms -->
+  <rect x="198" y="168" width="86" height="32" rx="4" fill="#2060d0" opacity="0.3" stroke="#2060d0" stroke-width="1.5"/>
+  <text x="241" y="180" font-size="7" fill="#d8ebff" text-anchor="middle" font-family="monospace">PAKKET</text>
+  <text x="241" y="191" font-size="7" fill="#d8ebff" text-anchor="middle" font-family="monospace">✓ heel</text>
+  <!-- Happy bubble -->
+  <rect x="45" y="70" width="115" height="30" rx="8" fill="#0a1828" stroke="#30d080" stroke-width="1.5"/>
+  <text x="103" y="82" font-size="8" fill="#d8ebff" text-anchor="middle" font-family="monospace">Gelukkig niets</text>
+  <text x="103" y="93" font-size="8" fill="#d8ebff" text-anchor="middle" font-family="monospace">beschadigd!</text>
+  <circle cx="163" cy="100" r="3" fill="#30d080" opacity="0.4"/>
+  <!-- Checkmark -->
+  <circle cx="300" cy="55" r="20" fill="#30d080" opacity="0.12" stroke="#30d080" stroke-width="2"/>
+  <text x="300" y="62" font-size="18" text-anchor="middle" fill="#30d080">✓</text>
+</svg>

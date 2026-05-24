@@ -2,18 +2,20 @@ import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ArrowLeft, Mic, Square, ChevronRight, CheckCircle2,
-  AlertCircle, Eye, EyeOff,
+  AlertCircle, Eye, EyeOff, Calendar, ChevronDown, ChevronUp,
+  Image as ImageIcon, Play,
 } from 'lucide-react';
-import { b2SprekenSim } from '../../data/b2-spreken-sim';
+import { b2SprekenSimSets } from '../../data/b2-spreken-sim';
+import { examYears } from '../../data/b2-spreken-exam-tasks';
 import { useAudioRecorder } from '../../hooks/useAudioRecorder';
 import { useProgressStore } from '../../store/useProgressStore';
-import type { SimDeel } from '../../types';
+import type { ExamSimTask, SimDeel } from '../../types';
 
 interface Props {
   onClose: () => void;
 }
 
-type Phase = 'intro' | 'preparing' | 'recording' | 'done' | 'finished';
+type Phase = 'year-select' | 'intro' | 'preparing' | 'recording' | 'done' | 'finished';
 
 const DEEL_COLOR: Record<SimDeel, string> = {
   'Deel 1': 'border-cyber-blue   text-cyber-blue',
@@ -23,6 +25,19 @@ const DEEL_COLOR: Record<SimDeel, string> = {
 
 const CIRCUMFERENCE = 2 * Math.PI * 40;
 
+type YearKey = string | number;
+
+interface YearOption {
+  key: YearKey;
+  label: string;
+  tasks: ExamSimTask[];
+}
+
+const YEAR_OPTIONS: YearOption[] = [
+  ...b2SprekenSimSets.map((s) => ({ key: s.id, label: s.label, tasks: s.tasks })),
+  ...examYears.map((y) => ({ key: y.year, label: String(y.year), tasks: y.tasks })),
+];
+
 export default function ExamSimulation({ onClose }: Props) {
   const { i18n } = useTranslation();
   const lang = i18n.language as 'tr' | 'en';
@@ -30,11 +45,10 @@ export default function ExamSimulation({ onClose }: Props) {
   const savedTaskIdx  = useProgressStore((s) => s.simTaskIdx);
   const setSimTaskIdx = useProgressStore((s) => s.setSimTaskIdx);
 
-  const tasks = b2SprekenSim;
-  const total  = tasks.length;
-
+  const [selectedYear, setSelectedYear] = useState<YearKey | null>(null);
+  const [tasks,        setTasks]        = useState<ExamSimTask[]>([]);
   const [taskIdx,    setTaskIdx]    = useState(0);
-  const [phase,      setPhase]      = useState<Phase>('intro');
+  const [phase,      setPhase]      = useState<Phase>('year-select');
   const [timeLeft,   setTimeLeft]   = useState(0);
   const [showModel,  setShowModel]  = useState(false);
 
@@ -46,16 +60,25 @@ export default function ExamSimulation({ onClose }: Props) {
   useEffect(() => { startFnRef.current = start; }, [start]);
   useEffect(() => () => cleanup(), [cleanup]);
 
-  const task = tasks[taskIdx];
+  const total = tasks.length;
+  const task  = tasks[taskIdx] as ExamSimTask | undefined;
+
+  const handleYearSelect = (option: YearOption) => {
+    setSelectedYear(option.key);
+    setTasks(option.tasks);
+    setTaskIdx(0);
+    setSimTaskIdx(0);
+    setPhase('intro');
+  };
 
   // ── Prep countdown ───────────────────────────────────────────────────────
   useEffect(() => {
-    if (phase !== 'preparing') return;
+    if (phase !== 'preparing' || !task) return;
     setTimeLeft(task.prepSeconds);
     startRef.current = performance.now();
 
     const tick = () => {
-      const elapsed  = performance.now() - startRef.current;
+      const elapsed   = performance.now() - startRef.current;
       const remaining = Math.max(0, task.prepSeconds - Math.floor(elapsed / 1000));
       setTimeLeft(remaining);
       if (remaining === 0) {
@@ -78,7 +101,7 @@ export default function ExamSimulation({ onClose }: Props) {
 
   // ── Speaking countdown ───────────────────────────────────────────────────
   useEffect(() => {
-    if (phase !== 'recording') return;
+    if (phase !== 'recording' || !task) return;
     startRef.current = performance.now();
 
     const tick = () => {
@@ -98,6 +121,7 @@ export default function ExamSimulation({ onClose }: Props) {
   }, [phase, taskIdx]);
 
   const startTask = async () => {
+    if (!task) return;
     cancelAnimationFrame(rafRef.current);
     reset();
     setShowModel(false);
@@ -133,20 +157,8 @@ export default function ExamSimulation({ onClose }: Props) {
     }
   };
 
-  const timerMax     = phase === 'preparing' ? task.prepSeconds : task.speakSeconds;
-  const progress     = timerMax > 0 ? timeLeft / timerMax : 1;
-  const dashOffset   = CIRCUMFERENCE * (1 - progress);
-  const isPrepping   = phase === 'preparing';
-  const isRecording  = phase === 'recording';
-  const ringColor    = isRecording ? '#e8ff47' : isPrepping ? '#4a9eff' : '#2a3a4a';
-
-  // ── INTRO ────────────────────────────────────────────────────────────────
-  if (phase === 'intro') {
-    const deelCounts = tasks.reduce<Record<string, number>>((acc, t) => {
-      acc[t.deel] = (acc[t.deel] ?? 0) + 1;
-      return acc;
-    }, {});
-
+  // ── YEAR SELECT ──────────────────────────────────────────────────────────
+  if (phase === 'year-select') {
     return (
       <div className="max-w-lg mx-auto px-4 py-6 flex flex-col gap-5">
         <div className="flex items-center gap-3">
@@ -156,79 +168,63 @@ export default function ExamSimulation({ onClose }: Props) {
           <div>
             <p className="font-mono text-[9px] text-cyber-muted uppercase tracking-widest">B2 · Spreken</p>
             <h2 className="text-sm font-bold text-cyber-text">
-              {lang === 'tr' ? 'Sınav Simülasyonu' : 'Exam Simulation'}
+              {lang === 'tr' ? 'Sınav Seç' : 'Choose Exam'}
             </h2>
           </div>
         </div>
 
-        {/* Deel cards */}
-        <div className="grid grid-cols-3 gap-3">
-          {(['Deel 1', 'Deel 2', 'Deel 3'] as SimDeel[]).map((d) => (
-            <div key={d} className={`bg-cyber-card border rounded-xl p-3 text-center ${DEEL_COLOR[d].split(' ')[0]} ${DEEL_COLOR[d].split(' ')[1]}`}>
-              <p className={`font-mono text-xs font-bold ${DEEL_COLOR[d].split(' ')[1]}`}>{d}</p>
-              <p className="font-mono text-2xl font-black text-cyber-text mt-1">{deelCounts[d] ?? 0}</p>
-              <p className="font-mono text-[8px] text-cyber-muted mt-0.5 uppercase tracking-wider">
-                {lang === 'tr' ? 'görev' : 'tasks'}
+        <div className="grid grid-cols-2 gap-3">
+          {YEAR_OPTIONS.map((opt) => (
+            <button
+              key={String(opt.key)}
+              onClick={() => handleYearSelect(opt)}
+              className="
+                bg-cyber-card border border-cyber-border rounded-xl p-4
+                text-left hover:border-cyber-yellow/60 transition-all active:scale-[0.98]
+                flex flex-col gap-1.5
+              "
+            >
+              <div className="flex items-center gap-2">
+                <Calendar size={12} className="text-cyber-muted shrink-0" />
+                <span className="font-mono text-[9px] text-cyber-muted uppercase tracking-wider">
+                  {opt.key === 'practice'
+                    ? (lang === 'tr' ? 'Alıştırma' : 'Practice')
+                    : 'Staatsexamen'}
+                </span>
+              </div>
+              <p className="font-mono text-xl font-black text-cyber-text">{opt.label}</p>
+              <p className="font-mono text-[9px] text-cyber-muted">
+                {opt.tasks.length} {lang === 'tr' ? 'görev' : 'tasks'}
               </p>
-            </div>
+            </button>
           ))}
         </div>
-
-        {/* Task list */}
-        <div className="flex flex-col gap-2">
-          {tasks.map((t, i) => (
-            <div key={t.id} className="bg-cyber-card border border-cyber-border rounded-xl px-4 py-3 flex items-center gap-3">
-              <span className="font-mono text-[9px] text-cyber-muted w-4 shrink-0">{i + 1}</span>
-              <div className="flex-1 min-w-0">
-                <p className="font-mono text-[9px] text-cyber-muted uppercase">{t.deel}</p>
-                <p className="text-sm font-semibold text-cyber-text truncate">{t.topic}</p>
-              </div>
-              <div className="flex items-center gap-2 text-cyber-muted shrink-0">
-                {t.prepSeconds > 0 && (
-                  <span className="font-mono text-[9px] text-cyber-blue">{t.prepSeconds}s prep</span>
-                )}
-                <span className="font-mono text-[9px] text-cyber-yellow">{t.speakSeconds}s</span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {savedTaskIdx > 0 && savedTaskIdx < total ? (
-          /* ── Mid-sim: offer continue or restart ── */
-          <div className="flex flex-col gap-3">
-            <button
-              onClick={() => { setTaskIdx(savedTaskIdx); setPhase('preparing'); }}
-              className="w-full py-3.5 rounded-xl bg-cyber-yellow text-cyber-dark font-mono text-sm font-black uppercase tracking-wider hover:opacity-90 transition-all active:scale-[0.99]"
-            >
-              {lang === 'tr'
-                ? `Kaldığın Yerden Devam Et — Görev ${savedTaskIdx + 1}/${total}`
-                : `Continue — Task ${savedTaskIdx + 1}/${total}`}
-            </button>
-            <button
-              onClick={() => { setSimTaskIdx(0); setTaskIdx(0); setPhase('preparing'); }}
-              className="w-full py-3 rounded-xl border border-cyber-border text-cyber-muted font-mono text-sm font-bold uppercase tracking-wider hover:border-cyber-muted hover:text-cyber-text transition-all active:scale-[0.99]"
-            >
-              {lang === 'tr' ? 'Yeniden Başlat' : 'Restart'}
-            </button>
-          </div>
-        ) : savedTaskIdx >= total ? (
-          /* ── Already finished: restart option ── */
-          <button
-            onClick={() => { setSimTaskIdx(0); setTaskIdx(0); setPhase('preparing'); }}
-            className="w-full py-3.5 rounded-xl bg-cyber-green/10 border border-cyber-green text-cyber-green font-mono text-sm font-black uppercase tracking-wider hover:bg-cyber-green/20 transition-all active:scale-[0.99]"
-          >
-            {lang === 'tr' ? 'Tekrar Başlat ✓ Tamamlandı' : 'Restart ✓ Completed'}
-          </button>
-        ) : (
-          /* ── Fresh start ── */
-          <button
-            onClick={() => { setTaskIdx(0); setPhase('preparing'); }}
-            className="w-full py-3.5 rounded-xl bg-cyber-yellow text-cyber-dark font-mono text-sm font-black uppercase tracking-wider hover:opacity-90 transition-all active:scale-[0.99]"
-          >
-            {lang === 'tr' ? 'Simülasyonu Başlat' : 'Start Simulation'}
-          </button>
-        )}
       </div>
+    );
+  }
+
+  // ── INTRO ────────────────────────────────────────────────────────────────
+  if (phase === 'intro' && tasks.length > 0) {
+    const deelCounts = tasks.reduce<Record<string, number>>((acc, t) => {
+      acc[t.deel] = (acc[t.deel] ?? 0) + 1;
+      return acc;
+    }, {});
+    const yearLabel = selectedYear === 'practice'
+      ? (lang === 'tr' ? 'Oefening' : 'Practice')
+      : String(selectedYear);
+
+    return (
+      <IntroScreen
+        lang={lang}
+        yearLabel={yearLabel}
+        tasks={tasks}
+        total={total}
+        savedTaskIdx={savedTaskIdx}
+        deelCounts={deelCounts}
+        onBack={() => { setPhase('year-select'); setTasks([]); }}
+        onStart={(fromIdx) => { setTaskIdx(fromIdx); setSimTaskIdx(fromIdx); setPhase('preparing'); }}
+        onRestart={() => { setSimTaskIdx(0); setTaskIdx(0); setPhase('preparing'); }}
+      />
     );
   }
 
@@ -250,8 +246,14 @@ export default function ExamSimulation({ onClose }: Props) {
             : `All ${total} tasks completed. Listen to your recordings and compare with model answers.`}
         </p>
         <button
-          onClick={onClose}
+          onClick={() => { setPhase('year-select'); setTasks([]); }}
           className="font-mono text-sm font-bold text-cyber-blue border border-cyber-blue px-6 py-3 rounded-xl hover:bg-cyber-blue/10 transition-all"
+        >
+          {lang === 'tr' ? 'Başka Yıl Seç' : 'Choose Another Year'}
+        </button>
+        <button
+          onClick={onClose}
+          className="font-mono text-xs text-cyber-muted hover:text-cyber-text transition-all"
         >
           {lang === 'tr' ? 'Ana Sayfaya Dön' : 'Back to Home'}
         </button>
@@ -260,6 +262,19 @@ export default function ExamSimulation({ onClose }: Props) {
   }
 
   // ── ACTIVE TASK ──────────────────────────────────────────────────────────
+  if (!task) return null;
+
+  const timerMax   = phase === 'preparing' ? task.prepSeconds : task.speakSeconds;
+  const progress   = timerMax > 0 ? timeLeft / timerMax : 1;
+  const dashOffset = CIRCUMFERENCE * (1 - progress);
+  const isPrepping  = phase === 'preparing';
+  const isRecording = phase === 'recording';
+  const ringColor   = isRecording ? '#e8ff47' : isPrepping ? '#4a9eff' : '#2a3a4a';
+
+  const yearLabel = selectedYear === 'practice'
+    ? (lang === 'tr' ? 'Oefening' : 'Practice')
+    : String(selectedYear);
+
   return (
     <div className="max-w-lg mx-auto px-4 py-5 flex flex-col gap-4">
 
@@ -274,7 +289,7 @@ export default function ExamSimulation({ onClose }: Props) {
         <div className="flex-1">
           <div className="flex items-center justify-between mb-1">
             <span className="font-mono text-[9px] text-cyber-muted uppercase tracking-widest">
-              {lang === 'tr' ? `Görev ${taskIdx + 1} / ${total}` : `Task ${taskIdx + 1} / ${total}`}
+              {yearLabel} · {lang === 'tr' ? `Görev ${taskIdx + 1} / ${total}` : `Task ${taskIdx + 1} / ${total}`}
             </span>
             <span className={`font-mono text-[9px] font-bold px-2 py-0.5 rounded-md border bg-transparent ${DEEL_COLOR[task.deel]}`}>
               {task.deel}
@@ -297,31 +312,40 @@ export default function ExamSimulation({ onClose }: Props) {
         <h3 className="text-base font-bold text-cyber-text">{task.topic}</h3>
       </div>
 
-      {/* Images */}
-      {task.imageUrls.length > 0 && (
+      {/* Images / placeholder cards */}
+      {(task.imageUrls.length > 0 || task.imageLabels.length > 0) && (
         <div className="flex gap-2 overflow-x-auto pb-1 snap-x snap-mandatory">
-          {task.imageUrls.map((url, i) => (
-            <div key={i} className="relative shrink-0 snap-start">
-              <img
-                src={url}
-                alt={task.imageLabels[i] ?? `Plaatje ${i + 1}`}
-                className="h-36 w-auto rounded-xl border border-cyber-border object-cover"
-                loading="lazy"
-              />
-              <span className="absolute bottom-1 left-1 font-mono text-[8px] bg-cyber-dark/80 text-cyber-muted px-1.5 py-0.5 rounded">
-                {`P${i + 1}`}
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Image labels (accessibility / placeholder hint) */}
-      {task.imageLabels.length > 0 && (
-        <div className="flex flex-col gap-1">
-          {task.imageLabels.map((lbl, i) => (
-            <p key={i} className="font-mono text-[8px] text-cyber-muted/50 italic">{lbl}</p>
-          ))}
+          {(task.imageLabels.length > 0 ? task.imageLabels : task.imageUrls).map((_, i) => {
+            const url = task.imageUrls[i];
+            const label = task.imageLabels[i] ?? `Plaatje ${i + 1}`;
+            const isPlaceholder = !url || url.includes('picsum.photos');
+            return isPlaceholder ? (
+              <div
+                key={i}
+                className="shrink-0 snap-start h-36 w-52 rounded-xl border border-dashed border-cyber-border/60 bg-cyber-card flex flex-col justify-between p-3"
+              >
+                <span className="font-mono text-[8px] text-cyber-muted uppercase tracking-wider">
+                  Plaatje {i + 1}
+                </span>
+                <p className="text-xs text-cyber-text/80 leading-snug">{label}</p>
+                <span className="font-mono text-[7px] text-cyber-muted/40 italic">
+                  {lang === 'tr' ? 'resim hazırlanıyor' : 'image pending'}
+                </span>
+              </div>
+            ) : (
+              <div key={i} className="relative shrink-0 snap-start">
+                <img
+                  src={url}
+                  alt={label}
+                  className="h-36 w-auto rounded-xl border border-cyber-border object-cover"
+                  loading="lazy"
+                />
+                <span className="absolute bottom-1 left-1 font-mono text-[8px] bg-cyber-dark/80 text-cyber-muted px-1.5 py-0.5 rounded">
+                  P{i + 1}
+                </span>
+              </div>
+            );
+          })}
         </div>
       )}
 
@@ -409,10 +433,20 @@ export default function ExamSimulation({ onClose }: Props) {
         </div>
       )}
 
-      {/* Start button (task view before prep) */}
+      {/* Start task button — shown before prep/recording begins */}
+      {phase !== 'done' && !isPrepping && !isRecording && (
+        <button
+          onClick={startTask}
+          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-cyber-yellow text-cyber-yellow bg-cyber-yellow/10 font-mono text-sm font-bold uppercase tracking-wider hover:bg-cyber-yellow/20 transition-all"
+        >
+          <Mic size={16} />
+          {lang === 'tr' ? 'Görevi Başlat' : 'Start Task'}
+        </button>
+      )}
+
+      {/* Done state */}
       {phase === 'done' && (
         <div className="flex flex-col gap-3">
-          {/* Audio */}
           {audioUrl && (
             <div className="bg-cyber-card border border-cyber-green/30 rounded-xl p-4">
               <p className="font-mono text-[8px] text-cyber-green uppercase tracking-widest mb-2">
@@ -422,7 +456,6 @@ export default function ExamSimulation({ onClose }: Props) {
             </div>
           )}
 
-          {/* Model answer reveal */}
           <button
             onClick={() => setShowModel((v) => !v)}
             className="flex items-center justify-between w-full px-4 py-3 rounded-xl border border-cyber-purple text-cyber-purple bg-cyber-purple/5 font-mono text-xs font-bold uppercase tracking-wider hover:bg-cyber-purple/10 transition-all"
@@ -438,7 +471,6 @@ export default function ExamSimulation({ onClose }: Props) {
             </div>
           )}
 
-          {/* Next */}
           <button
             onClick={nextTask}
             className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-cyber-yellow text-cyber-dark font-mono text-sm font-black uppercase tracking-wider hover:opacity-90 transition-all active:scale-[0.99]"
@@ -451,17 +483,245 @@ export default function ExamSimulation({ onClose }: Props) {
         </div>
       )}
 
-      {/* Start task button — shown at intro landing before first prep */}
-      {phase !== 'done' && !isPrepping && !isRecording && (
+    </div>
+  );
+}
+
+// ─── IntroScreen ─────────────────────────────────────────────────────────────
+
+interface IntroProps {
+  lang: 'tr' | 'en';
+  yearLabel: string;
+  tasks: ExamSimTask[];
+  total: number;
+  savedTaskIdx: number;
+  deelCounts: Record<string, number>;
+  onBack: () => void;
+  onStart: (fromIdx: number) => void;
+  onRestart: () => void;
+}
+
+function TaskImages({ task, lang }: { task: ExamSimTask; lang: 'tr' | 'en' }) {
+  if (task.imageUrls.length === 0 && task.imageLabels.length === 0) return null;
+  const count = Math.max(task.imageUrls.length, task.imageLabels.length);
+  return (
+    <div className="flex gap-2 overflow-x-auto pb-1 snap-x snap-mandatory">
+      {Array.from({ length: count }).map((_, i) => {
+        const url = task.imageUrls[i];
+        const label = task.imageLabels[i] ?? `Plaatje ${i + 1}`;
+        const isPlaceholder = !url || url.includes('picsum.photos');
+        return isPlaceholder ? (
+          <div
+            key={i}
+            className="shrink-0 snap-start h-28 w-44 rounded-xl border border-dashed border-cyber-border/60 bg-cyber-dark flex flex-col justify-between p-2.5"
+          >
+            <span className="font-mono text-[7px] text-cyber-muted uppercase tracking-wider">
+              Plaatje {i + 1}
+            </span>
+            <p className="text-[10px] text-cyber-text/80 leading-snug">{label}</p>
+            <span className="font-mono text-[7px] text-cyber-muted/40 italic">
+              {lang === 'tr' ? 'resim bekleniyor' : 'image pending'}
+            </span>
+          </div>
+        ) : (
+          <div key={i} className="relative shrink-0 snap-start">
+            <img
+              src={url}
+              alt={label}
+              className="h-28 w-auto rounded-xl border border-cyber-border object-cover"
+              loading="lazy"
+            />
+            <span className="absolute bottom-1 left-1 font-mono text-[7px] bg-cyber-dark/80 text-cyber-muted px-1 py-0.5 rounded">
+              P{i + 1}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function IntroScreen({
+  lang, yearLabel, tasks, total, savedTaskIdx,
+  deelCounts, onBack, onStart, onRestart,
+}: IntroProps) {
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  const toggle = (id: string) => setExpandedId((prev) => (prev === id ? null : id));
+
+  return (
+    <div className="max-w-lg mx-auto px-4 py-6 flex flex-col gap-5">
+      {/* Header */}
+      <div className="flex items-center gap-3">
         <button
-          onClick={startTask}
-          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-cyber-yellow text-cyber-yellow bg-cyber-yellow/10 font-mono text-sm font-bold uppercase tracking-wider hover:bg-cyber-yellow/20 transition-all"
+          onClick={onBack}
+          className="p-1.5 rounded-lg border border-cyber-border text-cyber-muted hover:text-cyber-text transition-all"
         >
-          <Mic size={16} />
-          {lang === 'tr' ? 'Görevi Başlat' : 'Start Task'}
+          <ArrowLeft size={16} />
+        </button>
+        <div>
+          <p className="font-mono text-[9px] text-cyber-muted uppercase tracking-widest">
+            B2 · Spreken · {yearLabel}
+          </p>
+          <h2 className="text-sm font-bold text-cyber-text">
+            {lang === 'tr' ? 'Sınav Simülasyonu' : 'Exam Simulation'}
+          </h2>
+        </div>
+      </div>
+
+      {/* Deel summary cards */}
+      <div className="grid grid-cols-3 gap-3">
+        {(['Deel 1', 'Deel 2', 'Deel 3'] as SimDeel[]).map((d) => (
+          <div
+            key={d}
+            className={`bg-cyber-card border rounded-xl p-3 text-center ${DEEL_COLOR[d].split(' ')[0]} ${DEEL_COLOR[d].split(' ')[1]}`}
+          >
+            <p className={`font-mono text-xs font-bold ${DEEL_COLOR[d].split(' ')[1]}`}>{d}</p>
+            <p className="font-mono text-2xl font-black text-cyber-text mt-1">{deelCounts[d] ?? 0}</p>
+            <p className="font-mono text-[8px] text-cyber-muted mt-0.5 uppercase tracking-wider">
+              {lang === 'tr' ? 'görev' : 'tasks'}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      {/* Task list — expandable */}
+      <div className="flex flex-col gap-2">
+        {tasks.map((t, i) => {
+          const isOpen = expandedId === t.id;
+          const hasMedia = t.imageUrls.length > 0 || t.imageLabels.length > 0;
+          const hasTable = !!t.tableData;
+          return (
+            <div
+              key={t.id}
+              className={`bg-cyber-card border rounded-xl overflow-hidden transition-all ${
+                isOpen ? 'border-cyber-yellow/50' : 'border-cyber-border'
+              }`}
+            >
+              {/* Card header — always visible, tap to toggle */}
+              <button
+                onClick={() => toggle(t.id)}
+                className="w-full flex items-center gap-3 px-4 py-3 text-left"
+              >
+                <span className="font-mono text-[9px] text-cyber-muted w-4 shrink-0">{i + 1}</span>
+                <div className="flex-1 min-w-0">
+                  <p className={`font-mono text-[9px] uppercase ${DEEL_COLOR[t.deel].split(' ')[1]}`}>
+                    {t.deel}
+                  </p>
+                  <p className="text-sm font-semibold text-cyber-text truncate">{t.topic}</p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  {hasMedia && (
+                    <ImageIcon size={11} className="text-cyber-blue/70" />
+                  )}
+                  {hasTable && (
+                    <span className="font-mono text-[8px] text-cyber-purple/70 border border-cyber-purple/30 px-1 rounded">
+                      tbl
+                    </span>
+                  )}
+                  {t.prepSeconds > 0 && (
+                    <span className="font-mono text-[9px] text-cyber-blue">{t.prepSeconds}s</span>
+                  )}
+                  <span className="font-mono text-[9px] text-cyber-yellow">{t.speakSeconds}s</span>
+                  {isOpen
+                    ? <ChevronUp size={13} className="text-cyber-muted ml-1" />
+                    : <ChevronDown size={13} className="text-cyber-muted ml-1" />}
+                </div>
+              </button>
+
+              {/* Expanded detail */}
+              {isOpen && (
+                <div className="border-t border-cyber-border/40 px-4 pb-4 flex flex-col gap-3">
+                  {/* Instruction */}
+                  <div className="pt-3">
+                    <p className="font-mono text-[8px] text-cyber-muted uppercase tracking-widest mb-1.5">
+                      {lang === 'tr' ? 'Görev (Hollandaca)' : 'Task (Dutch)'}
+                    </p>
+                    <p className="text-sm text-cyber-text leading-relaxed">{t.instructionNl}</p>
+                  </div>
+
+                  {/* Images */}
+                  <TaskImages task={t} lang={lang} />
+
+                  {/* Table */}
+                  {t.tableData && (
+                    <div className="bg-cyber-dark border border-cyber-border/40 rounded-xl p-3">
+                      <p className="font-mono text-[8px] text-cyber-muted uppercase tracking-widest mb-1.5">
+                        Tabel
+                      </p>
+                      {t.tableData.split('\n').map((row, ri) => (
+                        <p key={ri} className="text-xs text-cyber-text leading-relaxed">{row}</p>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Timing row */}
+                  <div className="flex items-center gap-3 pt-1">
+                    {t.prepSeconds > 0 && (
+                      <span className="font-mono text-[9px] text-cyber-blue border border-cyber-blue/30 bg-cyber-blue/5 px-2 py-1 rounded-lg">
+                        {t.prepSeconds}s {lang === 'tr' ? 'hazırlık' : 'prep'}
+                      </span>
+                    )}
+                    <span className="font-mono text-[9px] text-cyber-yellow border border-cyber-yellow/30 bg-cyber-yellow/5 px-2 py-1 rounded-lg">
+                      {t.speakSeconds}s {lang === 'tr' ? 'konuşma' : 'speak'}
+                    </span>
+                  </div>
+
+                  {/* Direct start button */}
+                  <button
+                    onClick={() => onStart(i)}
+                    className="
+                      w-full flex items-center justify-center gap-2 py-2.5 rounded-xl
+                      border border-cyber-yellow bg-cyber-yellow/10 text-cyber-yellow
+                      font-mono text-xs font-bold uppercase tracking-wider
+                      hover:bg-cyber-yellow/20 transition-all active:scale-[0.99]
+                    "
+                  >
+                    <Play size={13} />
+                    {lang === 'tr'
+                      ? `${i + 1}. Görevden Başla`
+                      : `Start from Task ${i + 1}`}
+                  </button>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Start / continue buttons */}
+      {savedTaskIdx > 0 && savedTaskIdx < total ? (
+        <div className="flex flex-col gap-3">
+          <button
+            onClick={() => onStart(savedTaskIdx)}
+            className="w-full py-3.5 rounded-xl bg-cyber-yellow text-cyber-dark font-mono text-sm font-black uppercase tracking-wider hover:opacity-90 transition-all active:scale-[0.99]"
+          >
+            {lang === 'tr'
+              ? `Kaldığın Yerden Devam Et — Görev ${savedTaskIdx + 1}/${total}`
+              : `Continue — Task ${savedTaskIdx + 1}/${total}`}
+          </button>
+          <button
+            onClick={onRestart}
+            className="w-full py-3 rounded-xl border border-cyber-border text-cyber-muted font-mono text-sm font-bold uppercase tracking-wider hover:border-cyber-muted hover:text-cyber-text transition-all active:scale-[0.99]"
+          >
+            {lang === 'tr' ? 'Baştan Başlat' : 'Restart'}
+          </button>
+        </div>
+      ) : savedTaskIdx >= total ? (
+        <button
+          onClick={onRestart}
+          className="w-full py-3.5 rounded-xl bg-cyber-green/10 border border-cyber-green text-cyber-green font-mono text-sm font-black uppercase tracking-wider hover:bg-cyber-green/20 transition-all active:scale-[0.99]"
+        >
+          {lang === 'tr' ? 'Tekrar Başlat ✓ Tamamlandı' : 'Restart ✓ Completed'}
+        </button>
+      ) : (
+        <button
+          onClick={() => onStart(0)}
+          className="w-full py-3.5 rounded-xl bg-cyber-yellow text-cyber-dark font-mono text-sm font-black uppercase tracking-wider hover:opacity-90 transition-all active:scale-[0.99]"
+        >
+          {lang === 'tr' ? 'Simülasyonu Başlat' : 'Start Simulation'}
         </button>
       )}
-
     </div>
   );
 }

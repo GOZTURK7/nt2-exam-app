@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Mic, Square, Trash2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Mic, Square, Trash2, AlertCircle, CheckCircle2, ChevronDown, ChevronUp } from 'lucide-react';
 import type { ProgramDay } from '../../types';
 import { useAudioRecorder } from '../../hooks/useAudioRecorder';
 import { saveAudio, getAudio, deleteAudio } from '../../services/audioService';
@@ -23,6 +23,7 @@ export default function ExamTab({ day, onComplete, isCompleted }: ExamTabProps) 
 
   const speakDuration = day.examTask.durationSeconds ?? 20;
   const prepDuration = day.examTask.prepSeconds ?? 0;
+  const instructionNl = day.examTask.instructionTranslations.nl ?? '';
   const instruction =
     day.examTask.instructionTranslations[lang] ??
     day.examTask.instructionTranslations['en'] ??
@@ -33,6 +34,7 @@ export default function ExamTab({ day, onComplete, isCompleted }: ExamTabProps) 
   const [prepLeft, setPrepLeft] = useState(prepDuration);
   const [idbUrl, setIdbUrl] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [phrasesOpen, setPhrasesOpen] = useState(false);
 
   const rafRef = useRef<number>(0);
   const startTimeRef = useRef<number>(0);
@@ -222,11 +224,23 @@ export default function ExamTab({ day, onComplete, isCompleted }: ExamTabProps) 
       )}
 
       {/* Instruction card */}
-      <div className="w-full bg-cyber-card border border-cyber-border rounded-2xl p-4">
-        <p className="font-mono text-[9px] text-cyber-muted uppercase tracking-widest mb-2">
-          {t('spreken.examTask')}
-        </p>
-        <p className="text-sm text-cyber-text leading-relaxed">{instruction}</p>
+      <div className="w-full bg-cyber-card border border-cyber-border rounded-2xl p-4 flex flex-col gap-3">
+        <div>
+          <p className="font-mono text-[9px] text-cyber-muted uppercase tracking-widest mb-1.5">
+            {t('spreken.examTask')}
+          </p>
+          {instructionNl && (
+            <p className="text-sm font-semibold text-cyber-text leading-relaxed">{instructionNl}</p>
+          )}
+        </div>
+        {instruction && instruction !== instructionNl && (
+          <div className="border-t border-cyber-border/40 pt-2.5">
+            <p className="font-mono text-[8px] text-cyber-muted/60 uppercase tracking-widest mb-1">
+              {lang === 'tr' ? 'Türkçe' : 'Translation'}
+            </p>
+            <p className="text-xs text-cyber-muted leading-relaxed">{instruction}</p>
+          </div>
+        )}
       </div>
 
       {/* Circular timer */}
@@ -439,6 +453,36 @@ export default function ExamTab({ day, onComplete, isCompleted }: ExamTabProps) 
             </button>
           )}
 
+        </div>
+      )}
+
+      {/* Key phrases for this task */}
+      {day.functionalPhrases.length > 0 && (
+        <div className="w-full">
+          <button
+            onClick={() => setPhrasesOpen((v) => !v)}
+            className="w-full flex items-center justify-between px-4 py-2.5 bg-cyber-card border border-cyber-border rounded-xl hover:border-cyber-muted/50 transition-all"
+          >
+            <span className="font-mono text-[9px] text-cyber-muted uppercase tracking-widest">
+              {lang === 'tr' ? 'Kullanabileceğiniz kalıplar' : 'Useful phrases'}
+              <span className="ml-2 text-cyber-yellow/60">{day.functionalPhrases.length}</span>
+            </span>
+            {phrasesOpen
+              ? <ChevronUp size={13} className="text-cyber-muted" />
+              : <ChevronDown size={13} className="text-cyber-muted" />}
+          </button>
+          {phrasesOpen && (
+            <div className="border border-t-0 border-cyber-border rounded-b-xl overflow-hidden divide-y divide-cyber-border/30">
+              {day.functionalPhrases.map((p) => (
+                <div key={p.id} className="px-4 py-2.5 bg-cyber-card/60">
+                  <p className="text-[13px] font-semibold text-cyber-text">{p.nl}</p>
+                  <p className="font-mono text-[10px] text-cyber-blue mt-0.5">
+                    {p.translations[lang] ?? p.translations.tr ?? p.translations.en ?? ''}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

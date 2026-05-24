@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 260" style="background:#0d1a2a;font-family:system-ui,sans-serif">
+  <text x="180" y="22" font-size="11" fill="#f5c432" text-anchor="middle" font-family="monospace" font-weight="bold">3 · LUNCH AAN DE MAAS</text>
+  <!-- Sky with sun -->
+  <rect x="0" y="35" width="360" height="100" fill="#080f1e"/>
+  <!-- Sun -->
+  <circle cx="310" cy="70" r="25" fill="#f5c432" opacity="0.15"/>
+  <circle cx="310" cy="70" r="18" fill="#f5c432" opacity="0.25"/>
+  <!-- Sun rays -->
+  <line x1="310" y1="42" x2="310" y2="34" stroke="#f5c432" stroke-width="2" opacity="0.5"/>
+  <line x1="330" y1="50" x2="336" y2="44" stroke="#f5c432" stroke-width="2" opacity="0.5"/>
+  <line x1="338" y1="70" x2="346" y2="70" stroke="#f5c432" stroke-width="2" opacity="0.5"/>
+  <!-- Water (Maas) -->
+  <rect x="0" y="185" width="360" height="75" fill="#0a1828"/>
+  <ellipse cx="100" cy="200" rx="60" ry="7" fill="none" stroke="#172840" stroke-width="1.5" opacity="0.7"/>
+  <ellipse cx="260" cy="210" rx="50" ry="5" fill="none" stroke="#172840" stroke-width="1.5" opacity="0.7"/>
+  <!-- Boat on water -->
+  <path d="M 60 190 Q 90 185 120 190 L 115 200 L 65 200 Z" fill="#172840" stroke="#2060d0" stroke-width="1"/>
+  <!-- Terrace -->
+  <rect x="80" y="135" width="200" height="55" rx="5" fill="#080f1e" stroke="#172840" stroke-width="2"/>
+  <!-- Tables -->
+  <rect x="100" y="148" width="50" height="30" rx="3" fill="#172840" stroke="#2060d0" stroke-width="1.5"/>
+  <rect x="210" y="148" width="50" height="30" rx="3" fill="#172840" stroke="#2060d0" stroke-width="1.5"/>
+  <!-- Food/drinks on tables -->
+  <circle cx="125" cy="163" r="5" fill="#f5c432" opacity="0.4"/>
+  <circle cx="235" cy="163" r="5" fill="#f5c432" opacity="0.4"/>
+  <!-- People at tables -->
+  <circle cx="105" cy="143" r="10" fill="#d8ebff" opacity="0.1" stroke="#d8ebff" stroke-width="1"/>
+  <circle cx="150" cy="143" r="10" fill="#d8ebff" opacity="0.1" stroke="#d8ebff" stroke-width="1"/>
+  <circle cx="215" cy="143" r="10" fill="#d8ebff" opacity="0.1" stroke="#d8ebff" stroke-width="1"/>
+  <circle cx="260" cy="143" r="10" fill="#d8ebff" opacity="0.1" stroke="#d8ebff" stroke-width="1"/>
+  <!-- City skyline in background -->
+  <rect x="20" y="100" width="30" height="40" fill="#080f1e" stroke="#172840" stroke-width="1" opacity="0.7"/>
+  <rect x="55" y="85" width="25" height="55" fill="#080f1e" stroke="#172840" stroke-width="1" opacity="0.7"/>
+  <rect x="285" y="90" width="30" height="50" fill="#080f1e" stroke="#172840" stroke-width="1" opacity="0.7"/>
+  <rect x="320" y="100" width="25" height="40" fill="#080f1e" stroke="#172840" stroke-width="1" opacity="0.7"/>
+  <!-- Label -->
+  <rect x="95" y="220" width="170" height="28" rx="6" fill="#f5c432" opacity="0.1" stroke="#f5c432" stroke-width="1"/>
+  <text x="180" y="232" font-size="9" fill="#f5c432" text-anchor="middle" font-family="monospace">Lunch aan de Maas</text>
+  <text x="180" y="243" font-size="9" fill="#f5c432" text-anchor="middle" font-family="monospace">☀️ heerlijk weer!</text>
+</svg>

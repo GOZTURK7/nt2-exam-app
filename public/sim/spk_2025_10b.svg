@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 260" style="background:#0d1a2a;font-family:system-ui,sans-serif">
+  <text x="180" y="22" font-size="11" fill="#f5c432" text-anchor="middle" font-family="monospace" font-weight="bold">2 · RONDLEIDING MARKTHAL</text>
+  <!-- Markthal arch (simplified) -->
+  <path d="M 30 220 Q 30 60 180 60 Q 330 60 330 220" fill="none" stroke="#d8ebff" stroke-width="3" opacity="0.3"/>
+  <!-- Interior arch fill -->
+  <path d="M 40 220 Q 40 80 180 80 Q 320 80 320 220" fill="#0a1828" opacity="0.4"/>
+  <!-- Mural colours on arch -->
+  <path d="M 50 210 Q 50 100 180 100 Q 310 100 310 210" fill="none" stroke="#f5c432" stroke-width="2" opacity="0.2"/>
+  <!-- Stalls inside -->
+  <rect x="60" y="155" width="50" height="40" rx="3" fill="#172840" stroke="#2060d0" stroke-width="1"/>
+  <text x="85" y="172" font-size="7" fill="#6d8faa" text-anchor="middle" font-family="monospace">kraam 1</text>
+  <rect x="155" y="155" width="50" height="40" rx="3" fill="#172840" stroke="#2060d0" stroke-width="1"/>
+  <text x="180" y="172" font-size="7" fill="#6d8faa" text-anchor="middle" font-family="monospace">kraam 2</text>
+  <rect x="250" y="155" width="50" height="40" rx="3" fill="#172840" stroke="#2060d0" stroke-width="1"/>
+  <text x="275" y="172" font-size="7" fill="#6d8faa" text-anchor="middle" font-family="monospace">kraam 3</text>
+  <!-- Guide person -->
+  <circle cx="180" cy="135" r="20" fill="#d8ebff" opacity="0.1" stroke="#f5c432" stroke-width="2"/>
+  <text x="180" y="122" font-size="7" fill="#f5c432" text-anchor="middle" font-family="monospace">gids</text>
+  <!-- Pointer stick -->
+  <line x1="192" y1="148" x2="220" y2="155" stroke="#f5c432" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Student group -->
+  <circle cx="90" cy="130" r="14" fill="#d8ebff" opacity="0.08" stroke="#d8ebff" stroke-width="1"/>
+  <circle cx="65" cy="135" r="14" fill="#d8ebff" opacity="0.08" stroke="#d8ebff" stroke-width="1"/>
+  <circle cx="280" cy="130" r="14" fill="#d8ebff" opacity="0.08" stroke="#d8ebff" stroke-width="1"/>
+  <circle cx="305" cy="135" r="14" fill="#d8ebff" opacity="0.08" stroke="#d8ebff" stroke-width="1"/>
+  <!-- Speech bubble from guide -->
+  <rect x="100" y="80" width="160" height="30" rx="8" fill="#0a1828" stroke="#f5c432" stroke-width="1.5"/>
+  <text x="180" y="93" font-size="8" fill="#d8ebff" text-anchor="middle" font-family="monospace">Dit gebouw is uniek:</text>
+  <text x="180" y="104" font-size="8" fill="#d8ebff" text-anchor="middle" font-family="monospace">2014 geopend in Rotterdam</text>
+  <circle cx="183" cy="113" r="3" fill="#f5c432" opacity="0.4"/>
+  <!-- Label -->
+  <text x="180" y="245" font-size="9" fill="#6d8faa" text-anchor="middle" font-family="monospace">Markthal Rotterdam</text>
+</svg>

@@ -16,6 +16,7 @@ export interface Phrase {
   id: string;
   nl: string;
   translations: Record<SupportedLanguage, string>;
+  examples?: string[];
 }
 
 export interface ExamTask {
@@ -90,6 +91,12 @@ export interface ExamSimTask {
   prepSeconds: number;
   speakSeconds: number;
   modelAnswer: string;
+}
+
+export interface SimSet {
+  id: string;
+  label: string;
+  tasks: ExamSimTask[];
 }
 
 export interface ExamSchedule {

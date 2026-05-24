@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" style="background:#0d1a2a;font-family:system-ui,sans-serif">
+  <!-- Title -->
+  <text x="200" y="22" font-size="12" fill="#58b2ff" text-anchor="middle" font-family="monospace" font-weight="bold">PLAATJE 1 – NEKOEFENING</text>
+
+  <!-- Person seated at desk -->
+  <!-- Chair -->
+  <rect x="145" y="215" width="110" height="10" rx="3" fill="#172840" stroke="#2060d0" stroke-width="1.5"/>
+  <rect x="155" y="225" width="15" height="50" rx="3" fill="#172840" stroke="#172840" stroke-width="1"/>
+  <rect x="230" y="225" width="15" height="50" rx="3" fill="#172840" stroke="#172840" stroke-width="1"/>
+  <rect x="145" y="180" width="10" height="35" rx="3" fill="#2060d0" opacity="0.4"/>
+  <rect x="245" y="180" width="10" height="35" rx="3" fill="#2060d0" opacity="0.4"/>
+  <!-- Seat -->
+  <rect x="145" y="210" width="110" height="15" rx="4" fill="#0a1828" stroke="#172840" stroke-width="1.5"/>
+
+  <!-- Body -->
+  <rect x="175" y="155" width="50" height="60" rx="8" fill="#d8ebff" opacity="0.15" stroke="#d8ebff" stroke-width="1.5"/>
+
+  <!-- Head (turning left arrow indicated) -->
+  <circle cx="200" cy="125" r="32" fill="#d8ebff" opacity="0.12" stroke="#d8ebff" stroke-width="2"/>
+  <!-- Face -->
+  <circle cx="188" cy="120" r="3" fill="#d8ebff" opacity="0.7"/>
+  <circle cx="212" cy="120" r="3" fill="#d8ebff" opacity="0.7"/>
+  <path d="M 190 130 Q 200 136 210 130" stroke="#d8ebff" stroke-width="1.5" fill="none" opacity="0.7"/>
+  <!-- Neck -->
+  <rect x="192" y="153" width="16" height="12" rx="3" fill="#d8ebff" opacity="0.15" stroke="#d8ebff" stroke-width="1.5"/>
+
+  <!-- Rotation arrows (left-right) -->
+  <!-- Left arrow -->
+  <path d="M 148 120 Q 130 100 148 80" stroke="#58b2ff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <polygon points="148,80 138,90 160,88" fill="#58b2ff"/>
+  <text x="120" y="100" font-size="10" fill="#58b2ff" font-family="monospace" text-anchor="middle">links</text>
+  <!-- Right arrow -->
+  <path d="M 252 120 Q 270 100 252 80" stroke="#58b2ff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <polygon points="252,80 262,90 240,88" fill="#58b2ff"/>
+  <text x="280" y="100" font-size="10" fill="#58b2ff" font-family="monospace" text-anchor="middle">rechts</text>
+
+  <!-- Shoulders annotation -->
+  <line x1="175" y1="160" x2="130" y2="200" stroke="#30d080" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="80" y="210" font-size="10" fill="#30d080" font-family="monospace">schouders</text>
+  <text x="80" y="222" font-size="10" fill="#30d080" font-family="monospace">laag houden</text>
+
+  <!-- Timer badge -->
+  <rect x="155" y="262" width="90" height="24" rx="12" fill="#0a1828" stroke="#58b2ff" stroke-width="1.5"/>
+  <text x="200" y="278" font-size="11" fill="#58b2ff" text-anchor="middle" font-family="monospace">3 sec vasthouden</text>
+</svg>

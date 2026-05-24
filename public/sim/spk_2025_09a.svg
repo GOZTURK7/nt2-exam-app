@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 260" style="background:#0d1a2a;font-family:system-ui,sans-serif">
+  <text x="180" y="22" font-size="11" fill="#f5c432" text-anchor="middle" font-family="monospace" font-weight="bold">1 · BRANDMELDER GAAT AF</text>
+  <!-- Ceiling -->
+  <rect x="0" y="40" width="360" height="12" fill="#080f1e" stroke="#172840" stroke-width="1"/>
+  <!-- Smoke detector on ceiling -->
+  <rect x="155" y="35" width="50" height="20" rx="8" fill="#0a1828" stroke="#f5c432" stroke-width="2"/>
+  <circle cx="180" cy="45" r="6" fill="#f5c432" opacity="0.4"/>
+  <!-- Flashing light effect -->
+  <circle cx="180" cy="45" r="12" fill="#f5c432" opacity="0.1"/>
+  <circle cx="180" cy="45" r="18" fill="#f5c432" opacity="0.05"/>
+  <!-- Sound waves -->
+  <path d="M 145 45 Q 130 35 145 25" stroke="#f5c432" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M 135 45 Q 115 32 135 20" stroke="#f5c432" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+  <path d="M 215 45 Q 230 35 215 25" stroke="#f5c432" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M 225 45 Q 245 32 225 20" stroke="#f5c432" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.6"/>
+  <!-- Label -->
+  <text x="180" y="68" font-size="8" fill="#f5c432" text-anchor="middle" font-family="monospace">BRANDMELDER</text>
+  <!-- Office scene below -->
+  <!-- Desk -->
+  <rect x="60" y="175" width="240" height="10" rx="3" fill="#172840" stroke="#172840" stroke-width="1"/>
+  <!-- Computer -->
+  <rect x="140" y="130" width="80" height="48" rx="3" fill="#0a1828" stroke="#172840" stroke-width="1.5"/>
+  <rect x="165" y="178" width="30" height="8" rx="2" fill="#172840"/>
+  <!-- People at desk looking up alarmed -->
+  <circle cx="100" cy="155" r="18" fill="#d8ebff" opacity="0.1" stroke="#d8ebff" stroke-width="1.5"/>
+  <circle cx="265" cy="155" r="18" fill="#d8ebff" opacity="0.1" stroke="#d8ebff" stroke-width="1.5"/>
+  <!-- Exclamation marks -->
+  <text x="88" y="130" font-size="18" fill="#f5c432" opacity="0.9">!</text>
+  <text x="258" y="130" font-size="18" fill="#f5c432" opacity="0.9">!</text>
+  <!-- Alert text box -->
+  <rect x="100" y="220" width="160" height="30" rx="6" fill="#f5c432" opacity="0.12" stroke="#f5c432" stroke-width="1.5"/>
+  <text x="180" y="233" font-size="9" fill="#f5c432" text-anchor="middle" font-family="monospace">ALARM — rode lamp</text>
+  <text x="180" y="244" font-size="9" fill="#f5c432" text-anchor="middle" font-family="monospace">knippert + sirene</text>
+</svg>

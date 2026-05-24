@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" style="background:#0d1a2a;font-family:system-ui,sans-serif">
+  <!-- Title -->
+  <text x="200" y="22" font-size="12" fill="#58b2ff" text-anchor="middle" font-family="monospace" font-weight="bold">PLAATJE 2 – RUGOEFENING</text>
+
+  <!-- Chair -->
+  <rect x="145" y="215" width="110" height="10" rx="3" fill="#172840" stroke="#2060d0" stroke-width="1.5"/>
+  <rect x="155" y="225" width="15" height="50" rx="3" fill="#172840"/>
+  <rect x="230" y="225" width="15" height="50" rx="3" fill="#172840"/>
+  <!-- Chair back (reclined) -->
+  <rect x="135" y="160" width="10" height="60" rx="3" fill="#2060d0" opacity="0.4" transform="rotate(-20,145,180)"/>
+  <rect x="255" y="160" width="10" height="60" rx="3" fill="#2060d0" opacity="0.4" transform="rotate(20,265,180)"/>
+  <!-- Seat -->
+  <rect x="145" y="210" width="110" height="15" rx="4" fill="#0a1828" stroke="#172840" stroke-width="1.5"/>
+
+  <!-- Body (leaning back) -->
+  <rect x="175" y="148" width="50" height="68" rx="8" fill="#d8ebff" opacity="0.12" stroke="#d8ebff" stroke-width="1.5" transform="rotate(-10,200,182)"/>
+
+  <!-- Head -->
+  <circle cx="200" cy="115" r="30" fill="#d8ebff" opacity="0.12" stroke="#d8ebff" stroke-width="2" transform="rotate(-10,200,130)"/>
+  <!-- Face relaxed -->
+  <circle cx="190" cy="112" r="3" fill="#d8ebff" opacity="0.7"/>
+  <circle cx="210" cy="112" r="3" fill="#d8ebff" opacity="0.7"/>
+  <path d="M 192 122 Q 200 128 208 122" stroke="#d8ebff" stroke-width="1.5" fill="none" opacity="0.7"/>
+
+  <!-- Arms raised above head -->
+  <line x1="175" y1="162" x2="130" y2="80" stroke="#d8ebff" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+  <line x1="225" y1="162" x2="270" y2="80" stroke="#d8ebff" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+  <!-- Hands -->
+  <circle cx="130" cy="78" r="8" fill="#d8ebff" opacity="0.15" stroke="#d8ebff" stroke-width="1.5"/>
+  <circle cx="270" cy="78" r="8" fill="#d8ebff" opacity="0.15" stroke="#d8ebff" stroke-width="1.5"/>
+
+  <!-- Stretch arrows -->
+  <path d="M 200 72 L 200 45" stroke="#f5c432" stroke-width="2" stroke-dasharray="4,3"/>
+  <polygon points="200,38 194,50 206,50" fill="#f5c432"/>
+  <text x="260" y="48" font-size="10" fill="#f5c432" font-family="monospace">strek omhoog</text>
+
+  <!-- Back arrow (lean back) -->
+  <path d="M 140 190 Q 100 190 105 160" stroke="#30d080" stroke-width="2" fill="none" stroke-dasharray="4,3"/>
+  <polygon points="105,160 95,170 118,165" fill="#30d080"/>
+  <text x="45" y="205" font-size="10" fill="#30d080" font-family="monospace">achterover</text>
+  <text x="60" y="217" font-size="10" fill="#30d080" font-family="monospace">leunen</text>
+
+  <!-- Timer badge -->
+  <rect x="155" y="265" width="90" height="24" rx="12" fill="#0a1828" stroke="#58b2ff" stroke-width="1.5"/>
+  <text x="200" y="281" font-size="11" fill="#58b2ff" text-anchor="middle" font-family="monospace">3 sec vasthouden</text>
+</svg>

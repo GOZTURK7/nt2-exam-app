@@ -266,8 +266,17 @@ export default function FlashcardTab({ day }: FlashcardTabProps) {
                   {phrase.nl}
                 </p>
                 <p className="text-sm text-cyber-blue leading-relaxed">
-                  {phrase.translations[lang] ?? phrase.translations['en']}
+                  {phrase.translations[lang] ?? phrase.translations.tr ?? phrase.translations.en}
                 </p>
+                {phrase.examples && phrase.examples.length > 0 && (
+                  <div className="mt-2 flex flex-col gap-1.5 border-t border-cyber-border/40 pt-2">
+                    {phrase.examples.map((ex, i) => (
+                      <p key={i} className="font-mono text-[10px] text-cyber-muted/80 italic leading-relaxed border-l-2 border-cyber-blue/30 pl-2">
+                        {ex}
+                      </p>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
           </div>

@@ -84,24 +84,36 @@ export default function DayCard({ day, isCompleted, onToggleComplete, onOpen }: 
 
       {/* Stats row */}
       <div className="flex items-center gap-4 flex-wrap">
-        <StatChip icon={<BookOpen size={12} />} value={day.vocabulary.length} color="text-cyber-blue" />
-        <StatChip icon={<MessageSquare size={12} />} value={day.functionalPhrases.length} color="text-cyber-purple" />
+        <StatChip icon={<BookOpen size={12} />} value={day.vocabulary.length} color="text-cyber-blue" tooltip={t('spreken.vocab')} />
+        <StatChip icon={<MessageSquare size={12} />} value={day.functionalPhrases.length} color="text-cyber-purple" tooltip={t('spreken.phrases')} />
         {day.examTask.durationSeconds != null && (
-          <StatChip icon={<Timer size={12} />} value={`${day.examTask.durationSeconds}s`} color="text-cyber-orange" />
+          <StatChip icon={<Timer size={12} />} value={`${day.examTask.durationSeconds}s`} color="text-cyber-orange" tooltip={t('spreken.examTask')} />
         )}
         {concreteCount > 0 && (
-          <StatChip icon={<Zap size={12} />} value={concreteCount} color="text-cyber-yellow" />
+          <StatChip icon={<Zap size={12} />} value={concreteCount} color="text-cyber-yellow" tooltip={t('spreken.concrete')} />
         )}
       </div>
     </div>
   );
 }
 
-function StatChip({ icon, value, color }: { icon: ReactNode; value: string | number; color: string }) {
+function StatChip({ icon, value, color, tooltip }: { icon: ReactNode; value: string | number; color: string; tooltip: string }) {
   return (
-    <div className={`flex items-center gap-1 ${color}`}>
+    <div className={`relative group flex items-center gap-1 ${color}`}>
       {icon}
       <span className="font-mono text-[11px] font-bold">{value}</span>
+      <div className="
+        absolute top-full left-1/2 -translate-x-1/2 mt-2
+        px-2 py-1 rounded-md
+        bg-[#0d1a2a] border border-cyber-border
+        font-mono text-[10px] text-cyber-text whitespace-nowrap
+        opacity-0 group-hover:opacity-100
+        transition-opacity duration-150
+        pointer-events-none z-20
+      ">
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-cyber-border" />
+        {tooltip}
+      </div>
     </div>
   );
 }

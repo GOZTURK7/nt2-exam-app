@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 340" style="background:#0d1a2a;font-family:system-ui,sans-serif">
+  <!-- Title -->
+  <text x="260" y="28" font-size="13" fill="#d8ebff" text-anchor="middle" font-family="monospace" font-weight="bold">VRIJE TIJDSBESTEDING KINDEREN (8–12 JAAR)</text>
+  <text x="260" y="44" font-size="10" fill="#6d8faa" text-anchor="middle" font-family="monospace">Percentage van vrije tijd · 2014 vs 2024</text>
+
+  <!-- Legend -->
+  <rect x="300" y="55" width="14" height="14" rx="2" fill="#2060d0" opacity="0.7"/>
+  <text x="320" y="66" font-size="10" fill="#6d8faa" font-family="monospace">2014</text>
+  <rect x="370" y="55" width="14" height="14" rx="2" fill="#f5c432" opacity="0.8"/>
+  <text x="390" y="66" font-size="10" fill="#6d8faa" font-family="monospace">2024</text>
+
+  <!-- Y-axis -->
+  <line x1="75" y1="80" x2="75" y2="285" stroke="#172840" stroke-width="1.5"/>
+  <!-- Y gridlines + labels -->
+  <line x1="75" y1="280" x2="500" y2="280" stroke="#172840" stroke-width="1" stroke-dasharray="4,4" opacity="0.6"/>
+  <text x="65" y="284" font-size="9" fill="#6d8faa" text-anchor="end" font-family="monospace">0%</text>
+  <line x1="75" y1="238" x2="500" y2="238" stroke="#172840" stroke-width="1" stroke-dasharray="4,4" opacity="0.4"/>
+  <text x="65" y="242" font-size="9" fill="#6d8faa" text-anchor="end" font-family="monospace">10%</text>
+  <line x1="75" y1="196" x2="500" y2="196" stroke="#172840" stroke-width="1" stroke-dasharray="4,4" opacity="0.4"/>
+  <text x="65" y="200" font-size="9" fill="#6d8faa" text-anchor="end" font-family="monospace">20%</text>
+  <line x1="75" y1="154" x2="500" y2="154" stroke="#172840" stroke-width="1" stroke-dasharray="4,4" opacity="0.4"/>
+  <text x="65" y="158" font-size="9" fill="#6d8faa" text-anchor="end" font-family="monospace">30%</text>
+  <line x1="75" y1="112" x2="500" y2="112" stroke="#172840" stroke-width="1" stroke-dasharray="4,4" opacity="0.4"/>
+  <text x="65" y="116" font-size="9" fill="#6d8faa" text-anchor="end" font-family="monospace">40%</text>
+  <line x1="75" y1="80" x2="500" y2="80" stroke="#172840" stroke-width="1" stroke-dasharray="4,4" opacity="0.3"/>
+  <text x="65" y="84" font-size="9" fill="#6d8faa" text-anchor="end" font-family="monospace">50%</text>
+
+  <!-- X-axis -->
+  <line x1="75" y1="280" x2="500" y2="280" stroke="#172840" stroke-width="1.5"/>
+
+  <!-- GROUP 1: Sociale media (5% → 40%) -->
+  <!-- 2014 bar: 5% = 21px tall -->
+  <rect x="100" y="259" width="38" height="21" fill="#2060d0" opacity="0.7" rx="3"/>
+  <text x="119" y="256" font-size="9" fill="#2060d0" text-anchor="middle" font-family="monospace" font-weight="bold">5%</text>
+  <!-- 2024 bar: 40% = 168px tall -->
+  <rect x="142" y="112" width="38" height="168" fill="#f5c432" opacity="0.8" rx="3"/>
+  <text x="161" y="108" font-size="9" fill="#f5c432" text-anchor="middle" font-family="monospace" font-weight="bold">40%</text>
+  <!-- Up arrow (big increase) -->
+  <text x="165" y="175" font-size="16" fill="#f5c432" opacity="0.6">↑</text>
+  <!-- Label -->
+  <text x="130" y="300" font-size="9" fill="#d8ebff" text-anchor="middle" font-family="monospace">sociale</text>
+  <text x="130" y="312" font-size="9" fill="#d8ebff" text-anchor="middle" font-family="monospace">media</text>
+
+  <!-- GROUP 2: TV kijken (25% → 30%) -->
+  <!-- 2014 bar: 25% = 105px -->
+  <rect x="200" y="175" width="38" height="105" fill="#2060d0" opacity="0.7" rx="3"/>
+  <text x="219" y="172" font-size="9" fill="#2060d0" text-anchor="middle" font-family="monospace" font-weight="bold">25%</text>
+  <!-- 2024 bar: 30% = 126px -->
+  <rect x="242" y="154" width="38" height="126" fill="#f5c432" opacity="0.8" rx="3"/>
+  <text x="261" y="150" font-size="9" fill="#f5c432" text-anchor="middle" font-family="monospace" font-weight="bold">30%</text>
+  <!-- Label -->
+  <text x="230" y="300" font-size="9" fill="#d8ebff" text-anchor="middle" font-family="monospace">tv</text>
+  <text x="230" y="312" font-size="9" fill="#d8ebff" text-anchor="middle" font-family="monospace">kijken</text>
+
+  <!-- GROUP 3: Sporten (40% → 20%) -->
+  <!-- 2014 bar: 40% = 168px -->
+  <rect x="300" y="112" width="38" height="168" fill="#2060d0" opacity="0.7" rx="3"/>
+  <text x="319" y="108" font-size="9" fill="#2060d0" text-anchor="middle" font-family="monospace" font-weight="bold">40%</text>
+  <!-- 2024 bar: 20% = 84px -->
+  <rect x="342" y="196" width="38" height="84" fill="#f5c432" opacity="0.8" rx="3"/>
+  <text x="361" y="192" font-size="9" fill="#f5c432" text-anchor="middle" font-family="monospace" font-weight="bold">20%</text>
+  <!-- Down arrow (big decrease) -->
+  <text x="364" y="240" font-size="16" fill="#30d080" opacity="0.6">↓</text>
+  <!-- Label -->
+  <text x="330" y="300" font-size="9" fill="#d8ebff" text-anchor="middle" font-family="monospace">sporten</text>
+  <text x="330" y="312" font-size="9" fill="#d8ebff" text-anchor="middle" font-family="monospace"></text>
+
+  <!-- GROUP 4: Muziek luisteren (25% → 10%) -->
+  <!-- 2014 bar: 25% = 105px -->
+  <rect x="400" y="175" width="38" height="105" fill="#2060d0" opacity="0.7" rx="3"/>
+  <text x="419" y="172" font-size="9" fill="#2060d0" text-anchor="middle" font-family="monospace" font-weight="bold">25%</text>
+  <!-- 2024 bar: 10% = 42px -->
+  <rect x="442" y="238" width="38" height="42" fill="#f5c432" opacity="0.8" rx="3"/>
+  <text x="461" y="234" font-size="9" fill="#f5c432" text-anchor="middle" font-family="monospace" font-weight="bold">10%</text>
+  <!-- Label -->
+  <text x="430" y="300" font-size="9" fill="#d8ebff" text-anchor="middle" font-family="monospace">muziek</text>
+  <text x="430" y="312" font-size="9" fill="#d8ebff" text-anchor="middle" font-family="monospace">luisteren</text>
+
+  <!-- Source note -->
+  <text x="260" y="332" font-size="8" fill="#6d8faa" text-anchor="middle" font-family="monospace">Bron: CBS Tijdsbestedingsonderzoek 2024</text>
+</svg>

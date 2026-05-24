@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 260" style="background:#0d1a2a;font-family:system-ui,sans-serif">
+  <text x="180" y="22" font-size="11" fill="#f5c432" text-anchor="middle" font-family="monospace" font-weight="bold">2 · AFGEVEN BIJ BUREN</text>
+  <!-- Neighbor door -->
+  <rect x="60" y="60" width="110" height="155" rx="5" fill="#0a1828" stroke="#30d080" stroke-width="2"/>
+  <circle cx="155" cy="140" r="6" fill="#172840" stroke="#6d8faa" stroke-width="1.5"/>
+  <!-- House number -->
+  <text x="95" y="90" font-size="14" fill="#6d8faa" text-anchor="middle" font-family="monospace" font-weight="bold">42</text>
+  <!-- Neighbor (buurvrouw) at door -->
+  <circle cx="100" cy="115" r="20" fill="#d8ebff" opacity="0.1" stroke="#30d080" stroke-width="1.5"/>
+  <text x="100" y="103" font-size="7" fill="#30d080" text-anchor="middle" font-family="monospace">buurvrouw</text>
+  <!-- Delivery person -->
+  <circle cx="250" cy="115" r="20" fill="#d8ebff" opacity="0.1" stroke="#d8ebff" stroke-width="1.5"/>
+  <!-- Package being handed over -->
+  <rect x="154" y="140" width="96" height="34" rx="4" fill="#2060d0" opacity="0.25" stroke="#2060d0" stroke-width="1.5"/>
+  <text x="202" y="153" font-size="7" fill="#d8ebff" text-anchor="middle" font-family="monospace">PAKKET</text>
+  <line x1="154" y1="152" x2="250" y2="152" stroke="#172840" stroke-width="1"/>
+  <!-- Hand arrows (transfer) -->
+  <line x1="165" y1="152" x2="148" y2="148" stroke="#30d080" stroke-width="2" stroke-linecap="round"/>
+  <polygon points="148,148 156,140 160,152" fill="#30d080"/>
+  <!-- Signature pad -->
+  <rect x="165" y="182" width="70" height="32" rx="3" fill="#0a1828" stroke="#172840" stroke-width="1.5"/>
+  <text x="200" y="195" font-size="7" fill="#6d8faa" text-anchor="middle" font-family="monospace">Handtekening</text>
+  <path d="M 172 208 Q 185 202 198 210 Q 210 204 220 208" stroke="#30d080" stroke-width="1.5" fill="none"/>
+  <!-- Pen -->
+  <line x1="232" y1="200" x2="244" y2="210" stroke="#d8ebff" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+  <!-- Speech -->
+  <rect x="252" y="70" width="90" height="30" rx="8" fill="#0a1828" stroke="#30d080" stroke-width="1.5"/>
+  <text x="297" y="82" font-size="7" fill="#d8ebff" text-anchor="middle" font-family="monospace">Geeft u dit door</text>
+  <text x="297" y="93" font-size="7" fill="#d8ebff" text-anchor="middle" font-family="monospace">aan de buren?</text>
+  <circle cx="254" cy="103" r="3" fill="#30d080" opacity="0.4"/>
+</svg>
