@@ -34,9 +34,11 @@ export default function FlashcardTab({ day }: FlashcardTabProps) {
   const getCard    = useProgressStore((s) => s.getCard);
   const srsCards   = useProgressStore((s) => s.srsCards);
 
-  const [cardIndex, setCardIndex] = useState(0);
-  const [flipped, setFlipped]     = useState(false);
-  const [rated, setRated]         = useState(false);
+  const [cardIndex, setCardIndex]       = useState(0);
+  const [flipped, setFlipped]           = useState(false);
+  const [rated, setRated]               = useState(false);
+  const [phraseIndex, setPhraseIndex]   = useState(0);
+  const [phraseFlipped, setPhraseFlipped] = useState(false);
 
   const words   = day.vocabulary;
   const phrases = day.functionalPhrases;
@@ -270,52 +272,108 @@ export default function FlashcardTab({ day }: FlashcardTabProps) {
         </button>
       </div>
 
-      {/* Phrases section */}
-      {phrases.length > 0 && (
-        <section className="mt-2">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="h-px flex-1 bg-cyber-border" />
-            <span className="text-[10px] font-semibold text-cyber-muted uppercase tracking-widest px-2">
-              {t('flashcard.phrases')} · {phrases.length}
-            </span>
-            <div className="h-px flex-1 bg-cyber-border" />
-          </div>
+      {/* Phrases carousel */}
+      {phrases.length > 0 && (() => {
+        const phrase = phrases[phraseIndex];
+        const goToPhrase = (idx: number) => {
+          setPhraseFlipped(false);
+          setPhraseIndex(Math.max(0, Math.min(idx, phrases.length - 1)));
+        };
+        return (
+          <section className="mt-2">
+            {/* Section header */}
+            <div className="flex items-center gap-2 mb-4">
+              <div className="h-px flex-1 bg-cyber-border" />
+              <span className="text-[10px] font-semibold text-cyber-muted uppercase tracking-widest px-2">
+                {t('flashcard.phrases')} · {phraseIndex + 1} / {phrases.length}
+              </span>
+              <div className="h-px flex-1 bg-cyber-border" />
+            </div>
 
-          <div className="flex flex-col gap-3">
-            {phrases.map((phrase) => (
+            {/* Flip card */}
+            <div style={{ perspective: '1200px' }} className="w-full select-none relative mb-4">
               <div
-                key={phrase.id}
-                className="bg-cyber-card border border-cyber-border rounded-xl shadow-card overflow-hidden"
+                style={{
+                  transformStyle: 'preserve-3d',
+                  transition: 'transform 0.45s cubic-bezier(.4,0,.2,1)',
+                  transform: phraseFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                  position: 'relative',
+                  width: '100%',
+                  minHeight: '180px',
+                }}
               >
-                {/* Left accent bar */}
-                <div className="flex">
-                  <div className="w-1 shrink-0 bg-cyber-blue/50 rounded-l-xl" />
-                  <div className="flex-1 p-4">
-                    {/* Dutch phrase */}
-                    <p className="text-base font-bold text-cyber-text leading-snug mb-1.5">
-                      {phrase.nl}
-                    </p>
-                    {/* Translation */}
-                    <p className="text-sm font-medium text-cyber-blue leading-relaxed">
-                      {phrase.translations[lang] ?? phrase.translations.tr ?? phrase.translations.en}
-                    </p>
-                    {/* Examples */}
-                    {phrase.examples && phrase.examples.length > 0 && (
-                      <div className="mt-3 flex flex-col gap-2 border-t border-cyber-border/40 pt-3">
-                        {phrase.examples.map((ex, i) => (
-                          <p key={i} className="text-[12px] text-cyber-muted italic leading-relaxed border-l-2 border-cyber-blue/30 pl-3">
-                            {ex}
-                          </p>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                {/* Front: Dutch phrase */}
+                <div
+                  style={{ backfaceVisibility: 'hidden' }}
+                  className="absolute inset-0 rounded-xl border border-cyber-blue/40 bg-cyber-card shadow-card flex flex-col items-center justify-center gap-3 p-6"
+                >
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyber-blue/50 mb-1" />
+                  <p className="text-lg font-bold text-cyber-text text-center leading-snug">
+                    {phrase.nl}
+                  </p>
+                  <p className="text-[10px] font-medium text-cyber-muted/60 mt-1">
+                    {t('flashcard.tapToFlip')}
+                  </p>
+                </div>
+
+                {/* Back: translation + examples */}
+                <div
+                  style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+                  className="absolute inset-0 rounded-xl border border-cyber-blue/50 bg-cyber-surface shadow-card flex flex-col justify-center gap-3 p-6 overflow-auto"
+                >
+                  <p className="text-base font-semibold text-cyber-blue leading-snug">
+                    {phrase.translations[lang] ?? phrase.translations.tr ?? phrase.translations.en}
+                  </p>
+                  {phrase.examples && phrase.examples.length > 0 && (
+                    <div className="flex flex-col gap-2 border-t border-cyber-border/40 pt-3 mt-1">
+                      {phrase.examples.map((ex, i) => (
+                        <p key={i} className="text-[12px] text-cyber-muted italic leading-relaxed border-l-2 border-cyber-blue/30 pl-3">
+                          {ex}
+                        </p>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
-        </section>
-      )}
+
+              {/* Tap zones */}
+              <div className="absolute inset-0 flex">
+                <button
+                  onClick={() => goToPhrase(phraseIndex - 1)}
+                  disabled={phraseIndex === 0}
+                  aria-label="Previous phrase"
+                  className="w-1/4 h-full disabled:cursor-default"
+                />
+                <button
+                  onClick={() => setPhraseFlipped((f) => !f)}
+                  aria-label="Flip phrase card"
+                  className="flex-1 h-full cursor-pointer"
+                />
+                <button
+                  onClick={() => goToPhrase(phraseIndex + 1)}
+                  disabled={phraseIndex === phrases.length - 1}
+                  aria-label="Next phrase"
+                  className="w-1/4 h-full disabled:cursor-default"
+                />
+              </div>
+            </div>
+
+            {/* Dot indicators */}
+            <div className="flex items-center justify-center gap-1.5">
+              {phrases.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => goToPhrase(i)}
+                  className={`
+                    rounded-full transition-all shrink-0
+                    ${i === phraseIndex ? 'w-4 h-2 bg-cyber-blue' : 'w-2 h-2 bg-cyber-border hover:bg-cyber-muted'}
+                  `}
+                />
+              ))}
+            </div>
+          </section>
+        );
+      })()}
 
     </div>
   );
