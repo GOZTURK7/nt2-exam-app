@@ -273,30 +273,44 @@ export default function FlashcardTab({ day }: FlashcardTabProps) {
       {/* Phrases section */}
       {phrases.length > 0 && (
         <section className="mt-2">
-          <p className="font-mono text-[9px] text-cyber-muted uppercase tracking-[0.22em] mb-3">
-            {t('flashcard.phrases')} · {phrases.length}
-          </p>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="h-px flex-1 bg-cyber-border" />
+            <span className="text-[10px] font-semibold text-cyber-muted uppercase tracking-widest px-2">
+              {t('flashcard.phrases')} · {phrases.length}
+            </span>
+            <div className="h-px flex-1 bg-cyber-border" />
+          </div>
+
           <div className="flex flex-col gap-3">
             {phrases.map((phrase) => (
               <div
                 key={phrase.id}
-                className="bg-cyber-card border border-cyber-border rounded-2xl p-4"
+                className="bg-cyber-card border border-cyber-border rounded-xl shadow-card overflow-hidden"
               >
-                <p className="text-[15px] font-bold text-cyber-text leading-snug mb-2">
-                  {phrase.nl}
-                </p>
-                <p className="text-sm text-cyber-blue leading-relaxed">
-                  {phrase.translations[lang] ?? phrase.translations.tr ?? phrase.translations.en}
-                </p>
-                {phrase.examples && phrase.examples.length > 0 && (
-                  <div className="mt-2 flex flex-col gap-1.5 border-t border-cyber-border/40 pt-2">
-                    {phrase.examples.map((ex, i) => (
-                      <p key={i} className="font-mono text-[10px] text-cyber-muted/80 italic leading-relaxed border-l-2 border-cyber-blue/30 pl-2">
-                        {ex}
-                      </p>
-                    ))}
+                {/* Left accent bar */}
+                <div className="flex">
+                  <div className="w-1 shrink-0 bg-cyber-blue/50 rounded-l-xl" />
+                  <div className="flex-1 p-4">
+                    {/* Dutch phrase */}
+                    <p className="text-base font-bold text-cyber-text leading-snug mb-1.5">
+                      {phrase.nl}
+                    </p>
+                    {/* Translation */}
+                    <p className="text-sm font-medium text-cyber-blue leading-relaxed">
+                      {phrase.translations[lang] ?? phrase.translations.tr ?? phrase.translations.en}
+                    </p>
+                    {/* Examples */}
+                    {phrase.examples && phrase.examples.length > 0 && (
+                      <div className="mt-3 flex flex-col gap-2 border-t border-cyber-border/40 pt-3">
+                        {phrase.examples.map((ex, i) => (
+                          <p key={i} className="text-[12px] text-cyber-muted italic leading-relaxed border-l-2 border-cyber-blue/30 pl-3">
+                            {ex}
+                          </p>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
             ))}
           </div>
