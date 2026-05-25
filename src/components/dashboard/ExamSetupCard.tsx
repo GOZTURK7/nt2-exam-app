@@ -26,7 +26,7 @@ export default function ExamSetupCard({ skill, forceOpen = false }: ExamSetupCar
   const existing = getExamSchedule(skill);
 
   const todayStr = new Date().toISOString().split('T')[0];
-  const [open, setOpen] = useState(forceOpen || !existing);
+  const [open, setOpen] = useState(forceOpen);
   const [localDate, setLocalDate] = useState(existing?.examDate ?? '');
   const [localHours, setLocalHours] = useState(existing?.dailyStudyHours ?? 2);
 

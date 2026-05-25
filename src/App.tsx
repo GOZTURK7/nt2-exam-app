@@ -68,6 +68,8 @@ export default function App() {
             activeSkill={activeSkill}
             onSkillChange={setActiveSkill}
             onDaySelect={setSelectedDay}
+            onReviewOpen={() => setReviewOpen(true)}
+            onSimOpen={() => setSimOpen(true)}
           />
         ) : (
           <ExamScreen onSimOpen={() => setSimOpen(true)} />
