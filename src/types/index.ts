@@ -103,6 +103,7 @@ export interface ExamSchedule {
   skill: Skill;
   examDate: string;        // "YYYY-MM-DD"
   dailyStudyHours: number;
+  startDate?: string;      // "YYYY-MM-DD" — set when schedule is first created
 }
 
 export interface UserProgress {

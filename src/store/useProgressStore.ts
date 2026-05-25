@@ -128,12 +128,16 @@ export const useProgressStore = create<ProgressStore>()(
 
       // ── Exam schedules ───────────────────────────────────────────────────
       setExamSchedule: (skill, examDate, dailyStudyHours) =>
-        set((state) => ({
-          examSchedules: [
-            ...state.examSchedules.filter((s) => s.skill !== skill),
-            { skill, examDate, dailyStudyHours },
-          ],
-        })),
+        set((state) => {
+          const existing = state.examSchedules.find((s) => s.skill === skill);
+          const startDate = existing?.startDate ?? new Date().toISOString().split('T')[0];
+          return {
+            examSchedules: [
+              ...state.examSchedules.filter((s) => s.skill !== skill),
+              { skill, examDate, dailyStudyHours, startDate },
+            ],
+          };
+        }),
 
       getExamSchedule: (skill) => get().examSchedules.find((s) => s.skill === skill),
 
